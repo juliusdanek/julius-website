@@ -1,0 +1,488 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+ <title>Julius' Blog</title>
+ <link href="http://blog.juliusdanek.dehttp://blog.juliusdanek.de/atom.xml" rel="self"/>
+ <link href="http://blog.juliusdanek.dehttp://blog.juliusdanek.de/"/>
+ <updated>2015-07-16T14:19:45-07:00</updated>
+ <id>http://blog.juliusdanek.de</id>
+ <author>
+   <name>Julius Danek</name>
+   <email>juliusdanek@gmail.com</email>
+ </author>
+
+ 
+ <entry>
+   <title>Building my first iPhone apps</title>
+   <link href="http://blog.juliusdanek.de/coding/2015/06/23/building-my-first-app%202/"/>
+   <updated>2015-06-23T00:00:00-07:00</updated>
+   <id>http://blog.juliusdanek.dehttp://blog.juliusdanek.de/coding/2015/06/23/building-my-first-app 2</id>
+   <content type="html">&lt;p&gt;Over the past two weeks I have been following the udacity.com &lt;a href=&quot;https://www.udacity.com/course/ios-developer-nanodegree--nd003&quot;&gt;nanodegree for the Swift programming language&lt;/a&gt;. What started off fairly slow with an introductory course to Swift and a first project, building an app that modified your voice when recording, continued with an extremely steep learning curve for the next project - a meme creator application.&lt;/p&gt;
+
+&lt;p&gt;In this app, the user would be able to take choose an image or take one with his/her camera and amend “meme-style” text to it. Then the user would be able to save or share the created memes and look at all the created memes in a table. What sounds very easy was actually quite challenging as it involved several important concepts that needed to be applied in order for the application to function:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Understanding the use of UIKit&lt;/li&gt;
+  &lt;li&gt;Using NSNotifiction Center&lt;/li&gt;
+  &lt;li&gt;Resizing images&lt;/li&gt;
+  &lt;li&gt;Accessing the camera roll and the photo library&lt;/li&gt;
+  &lt;li&gt;Using navigation controller&lt;/li&gt;
+  &lt;li&gt;Using the tab controller&lt;/li&gt;
+  &lt;li&gt;Pushing viewcontrollers modally and through different methods&lt;/li&gt;
+  &lt;li&gt;Setting up table and collection views&lt;/li&gt;
+  &lt;li&gt;NSDate&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;I started out by setting up a tabbed application in Xcode. The picture shows how my storyboard is set up. For those of you that do not know, the storyboard connects all the visual element of an iOS application. You connect those visual elements to the code behind the app. The code controls the visual elements as well as the data behind an application. This interaction is called the MVC - model view controller. The model is the data, the view are the visual elements and the controller connects the two as well controlling the visual output depending on the data. For more info check out: &lt;a href=&quot;http://blog.codinghorror.com/understanding-model-view-controller/&quot;&gt;http://blog.codinghorror.com/understanding-model-view-controller/&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Check out the storyboard for my application. The tab view controller is first. When pressing the button on the top right you navigate to the meme editor. From there, an interaction with the “share” button will bring up the activity controller. Any interaction with that controller will add the meme to the data model and will get displayed in the table view that was also the starting point in the app. When you select a meme in the table view (or the collection view which can be selected in the beginning of the app) you get shown a detail view that allows to edit the meme or delete it.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/meme-storyboard.png&quot; alt=&quot;Meme-Me app picture&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;This is the starting point of the app. On the top right you are able to open the meme editor and start editing memes. The view is split into a table view and a collection view, accessible through the tab bar on the bottom. Since the table and collection are not populated with data yet (the user hasn’t created any memes), they are both hidden and a label is displayed instead that tells the user to add a meme first. As you can see, the editing button on the top left is disabled as well.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/meme-empty-table.jpg&quot; alt=&quot;Meme-me table view&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;When the “add” button is touched up, the meme-editor pushes up modally (meaning that it is its own contained view, coming up from the bottom, as opposed to navigating deeper into the application to the right, like for example in the settings app on your iPhone). Here you are able to select an image from your camera roll or take one yourself. The image then gets fit into an imageview surrounded by two textfields. These textfields have been modified with custom properties. When you edit the bottom text field, the entire bottom view pushes up. This piece of code was actually quite some work as the viewcontroller has to subscribe to notifications when the keyboard would shift up or down. Once these notifications “arrive”, the screen can be shifted up by the height of the keyboard. After subscribing to notifications, you need to unsubscribe when exiting the view and you also need to implement a function to shift the view back down when the keyboard hides. Code snippet below:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-swift&quot; data-lang=&quot;swift&quot;&gt;&lt;span class=&quot;c1&quot;&gt;//subscribing to notifications -&amp;gt; This function gets called before the view appears&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;subscribeToKeyboardNotifications&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;bp&quot;&gt;NSNotificationCenter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;defaultCenter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;addObserver&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;selector&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;keyboardWillShow:&amp;quot;&lt;/span&gt;    &lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;UIKeyboardWillShowNotification&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;object&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;bp&quot;&gt;NSNotificationCenter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;defaultCenter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;addObserver&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;selector&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;keyboardWillDisappear:&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;UIKeyboardWillHideNotification&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;object&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    
+    &lt;span class=&quot;c1&quot;&gt;//finding out keyboard height in pixels&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;getKeyboardHeight&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;notification&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;NSNotification&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CGFloat&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;userInfo&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;notification&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;userInfo&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;keyboardSize&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;userInfo&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;UIKeyboardFrameEndUserInfoKey&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;as&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;NSValue&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// of CGRect&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;keyboardSize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;CGRectValue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;height&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    
+    &lt;span class=&quot;c1&quot;&gt;//what to do when the keyboard shifts up, conditional on the bottom text field being edited. Subtract the keyboard height from the frame origin, so it shifts up&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;keyboardWillShow&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;notification&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;NSNotification&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;showing Keyboard&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;bottomField&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;isFirstResponder&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;view&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;frame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;origin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;  &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getKeyboardHeight&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;notification&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/meme-editor.jpg&quot; alt=&quot;Meme Editor&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;After the meme is ready, the user can take touch up the share button on the top left, which brings up an activity controller. The activity controller receives a snapshot of the created image and allows the user to share or save it. Any action except cancel will exit the meme-editor and add the image to the saved memes. Saved memes actually is an array in the app delegate, storing all the memes (apparently this is bad practice but I will learn about different ways of storing data soon). For this purpose I created a custom class Meme that stores the memes original images, the bottom and top text, the memedImage and the date and time created.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/meme-activity.jpg&quot; alt=&quot;Meme Activity Controller&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;After choosing an activity, the meme-editor will get exited and we can see the table view populated with the meme that we just created. The edit button allows us to delete the meme. The date created, the top text and the memedImage are displayed in a table cell. Every time the view loads, the table gets updated and re-populated. When touch up on the meme, a detail view pulls up that allows you to see the meme in full detail as well as deleting or editing it. Editing will pull up the meme editor and pass the information stored in the meme struct (topText, bottomText, original image) to the editor, allowing you to start off with the original meme.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/meme-table-full.jpg&quot; alt=&quot;Meme Table Populated&quot; title=&quot;Populated Table&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Concluding, I am very satisfied with my progress. The app looks pretty sleek. I still have some issues understanding the whole navigation controller concept and with some of the layout stuff but overall I have a pretty good idea how the MVC concept works and how data gets passed around through the app. I am excited about my next projects.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/meme-detail.jpg&quot; alt=&quot;Meme Detail Delete&quot; title=&quot;Detail View&quot; /&gt;&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Sources of money</title>
+   <link href="http://blog.juliusdanek.de/finance/2015/06/20/sources-of-money/"/>
+   <updated>2015-06-20T00:00:00-07:00</updated>
+   <id>http://blog.juliusdanek.dehttp://blog.juliusdanek.de/finance/2015/06/20/sources-of-money</id>
+   <content type="html">&lt;p&gt;This is the first post in a series about fundraising for entrepreneurs. For an overview, navigate to &lt;a href=&quot;/finance/2015/06/19/fundraising-101/&quot;&gt;fundraising 101&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Sources of money and actors in the venture financing business are abundant. There are angels, accelerators, incubators, VC funds, strategic funds, institutional investors, friends and family, grants, and so on and so on. How should you know what is right for you and what is not? VC money definitely is not always the right answer, as this &lt;a href=&quot;http://www.fastcompany.com/3036130/hit-the-ground-running/why-venture-capital-wasnt-right-for-me-and-15-alternative-funding-sou&quot;&gt;blogpost by Laurie Peterson&lt;/a&gt; perfectly illustrates. She also provides an excellent overview over the type of sources of funding that you can leverage next to traditional VC funding.&lt;/p&gt;
+
+&lt;p&gt;Especially companies in seed or early funding stage can often profit from alternative funding models to traditional, large VCs. The infographic below demonstrates that VCs have been reluctant to make seed stage investments in recent years, even though the sums of money have increased. Early stage deals have been faring better but the number has been decreasing as of this quarter. This evidence clearly warrants a second look at the alternatives, some of which I will illustrate in this post. I will not cover traditional VCs but will assume that the reader is familiar with what a VC fund is.&lt;/p&gt;
+
+&lt;script id=&quot;infogram_0_number_of_deals_and__per_deal_in_vc_from_2005_to_2015&quot; src=&quot;//e.infogr.am/js/embed.js?46k&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;
+&lt;div style=&quot;width:100%;border-top:1px solid #acacac;padding-top:3px;font-family:Arial;font-size:10px;text-align:center;&quot;&gt;&lt;a target=&quot;_blank&quot; href=&quot;https://infogr.am/number_of_deals_and__per_deal_in_vc_from_2005_to_2015&quot; style=&quot;color:#acacac;text-decoration:none;&quot;&gt;Number of deals and $ per deal in VC from 2005 to 2015&lt;/a&gt; | &lt;a style=&quot;color:#acacac;text-decoration:none;&quot; href=&quot;https://infogr.am&quot; target=&quot;_blank&quot;&gt;Create infographics&lt;/a&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;free-money&quot;&gt;“Free Money”&lt;/h3&gt;
+
+&lt;p&gt;The first option to consider when fundraising are sources of “free money”, i.e. money that does not imply relinquishing equity in the company or taking on debt obligations. I would differentiate between three major categories here:&lt;/p&gt;
+
+&lt;h4 id=&quot;grants-and-government-schemes&quot;&gt;1. Grants and government schemes&lt;/h4&gt;
+
+&lt;p&gt;Grants are an extremely useful way to receive funding for early stage research. Grants are usually an option in university environments and are tied to specific types of research.
+&lt;!-- research financing with grants --&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;competitions&quot;&gt;2. Competitions&lt;/h4&gt;
+
+&lt;p&gt;Grasshopper has compiled a great list with many available startup competitions(&lt;a href=&quot;http://grasshopper.com/blog/startup-competition-guide/&quot;&gt;http://grasshopper.com/blog/startup-competition-guide/&lt;/a&gt;). 
+There is an abundance of entrepreneurship competitions throughout the US and Europe. Most competitions hand out cash-prizes and in many cases offer additional benefits such as consulting, engineering expertise or introductions to further programs. Grasshopper has compiled a great list with many available &lt;a href=&quot;http://grasshopper.com/blog/startup-competition-guide/&quot;&gt;startup competitions&lt;/a&gt;.&lt;/p&gt;
+
+&lt;!-- The list below contains a continuously updated list of competitions with prizes. **Feel free to submit competitions [here](TODO: INSERT LINK) for inclusion on the list**
+ --&gt;
+
+&lt;!-- Make list with competitions, main prize, location and focus --&gt;
+
+&lt;h4 id=&quot;summer-programs&quot;&gt;3. Summer programs&lt;/h4&gt;
+
+&lt;p&gt;Summer programs are another great way to raise money free of cost with the added benefit of mentorship and often office space for several months. The mentorship aspect is actually the most valuable aspect of the offer. Usually, teams participating in those types of programs are strung together in “classes” and go through the program together. The lessons learned from one another plus many bonus programs, workshops and mentorship lessons that the accelerators offer make these programs tremendously valuable. Since many of these programs are conducted by VCs or by major universities, they are also an excellent opportunity expand your network for possible future funding.&lt;/p&gt;
+
+&lt;p&gt;Some of the more prominent summer programs are:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://summer.hcp.com/&quot;&gt;Summer@Highland&lt;/a&gt;: Check out their blog at &lt;a href=&quot;http://summerathighland.tumblr.com/&quot;&gt;http://summerathighland.tumblr.com/&lt;/a&gt; for more details and to know what being part of a summer program is like.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://lsvp.com/summer-fellowships/&quot;&gt;Lightspeed Ventures Fellowship&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://entrepreneurship.mit.edu/accelerator/&quot;&gt;MIT GFSA accelerator&lt;/a&gt;&lt;/p&gt;
+
+&lt;!-- Make list with accelerators and find example blogpost that shows a day in an accelerator.  --&gt;
+
+&lt;p&gt;The caveat with these sources is that you can absolutely not plan for or rely on them. Especially in grants the application process might be very lengthy and burdensome. Competitions and summer programs however are definitely an important stepping stone, giving entrepreneurs the opportunity to re-work pitches, to network and to gain general public exposure for their company.&lt;/p&gt;
+
+&lt;h3 id=&quot;angels-angel-funds-and-micro-vcs&quot;&gt;Angels, Angel Funds and Micro-VCs&lt;/h3&gt;
+
+&lt;p&gt;Angels in a nutshell are wealthy individuals that usually have either founded a company before or accumulated significant industry expertise. Angels commonly invest between $100.000 to $1.000.000, or more in exceptional cases. For a brief summary on angel investors, read &lt;a href=&quot;http://www.entrepreneur.com/article/52742&quot;&gt;http://www.entrepreneur.com/article/52742&lt;/a&gt;. Next to providing initial seed money, angel investors can be of tremendous help with their usually extensive networks and expertise. Angel investors have the reputation to not make money in the fundraising community as many of their investments are in very risky early stage or seed companies. Studies have shown this conception &lt;a href=&quot;http://www.angelblog.net/Angel_Returns.html&quot;&gt;not to be true&lt;/a&gt;. For some further reading on angels, visit:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;http://www.angelblog.net/index.html&quot;&gt;Angel Blog&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://www.paulgraham.com/angelinvesting.html&quot;&gt;How to be an Angel Investor&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.gsb.stanford.edu/ces/resources/angel_financing.html&quot;&gt;Angel Financing&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://angel.co/&quot;&gt;Angel List (You should really know this website)&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://nextviewventures.com/blog/different-types-of-angel-investors/&quot;&gt;Different Types of Angels&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Angel investor groups have nuanced differences as well.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/angel_scales.jpg&quot; alt=&quot;Angel Groups&quot; /&gt;
+&lt;em&gt;Courtesy of: &lt;a href=&quot;http://commonangels.com/our-team/management/maia-heymann/&quot;&gt;Maya Heymann&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Angel groups:&lt;/strong&gt; Angel investor groups or funds consist of several angels that have joined forces in order to combine expertise and to pool financial resources, allowing greater investments. They usually average around 100 members, are region-specific and can differ in the industries they invest in.&lt;/p&gt;
+
+&lt;p&gt;Further reading:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;http://www.angelcapitalassociation.org/directory/&quot;&gt;Angel Capital Association members&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://www.entrepreneur.com/article/220149&quot;&gt;Top 10 funds&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;Angel funds:&lt;/strong&gt; Angel funds pool individual angels money into a fund that then gets invested. Entrepreneurs have the advantage of having access to larger monetary funds. The fund managers can find the individual angels invested in the fund that would be the best fit for the company as advisors.&lt;/p&gt;
+
+&lt;p&gt;Further reading:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;http://commonangels.com/about/&quot;&gt;Common Angels Venture&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;Angel syndicates:&lt;/strong&gt; Angel list provides the opportunity for syndicates to co-invest in companies. Hereby individual angels make a pledge to a company and other angels make follow-on investments. The investment of one angel hereby acts as a “social proof” or seal of approval. Usually super star angels will have several followers willing to make co-investments. Thus, secure an investment from one and you might get a few follow-ons.&lt;/p&gt;
+
+&lt;p&gt;Further reading:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;http://venturebeat.com/2014/06/29/an-angel-investors-ultimate-guide-to-angellist-syndicates/&quot;&gt;Ultimate Guide to Syndicates&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://angel.co/syndicates&quot;&gt;Angel List Syndicates&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://bryce.vc/post/3520840379/why-i-deleted-my-angellist-account&quot;&gt;A critical View&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;Micro-VCs&lt;/strong&gt; are venture capital funds with smaller amounts of assets under management (AUM), usually below $50m but up to about $100m. Micro-VCs primarily engage in seed and early-stage deals and invest smaller amounts of money. The current early stage average deal size for Micro-VCs is $3.4m. I have included several links for great readings on micro-VCs here:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.cbinsights.com/blog/top-micro-venture-capital-firms/#network&quot;&gt;Trends and Top Investors&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://pevcbanker.com/mapping-out-micro-vc/&quot;&gt;Great list of Micro-VCs&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://techcrunch.com/2015/04/26/the-microvc-shakeout/&quot;&gt;Concerns about growing number of Micro-VCs&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.cbinsights.com/blog/revisiting-micro-vc-market/&quot;&gt;Where is the Micro-VC market going?&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;accelerators&quot;&gt;Accelerators&lt;/h3&gt;
+
+&lt;p&gt;Quoting &lt;a href=&quot;https://en.wikipedia.org/wiki/Seed_accelerator&quot;&gt;Wikipedia&lt;/a&gt; here:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Seed accelerators also known as startup accelerators are fixed-term, cohort-based programs, that include mentorship and educational components and culminate in a public pitch event or demo day. While traditional business incubators are often government-funded, generally take no equity, and focus on biotech, medical technology, clean tech or product-centric companies, accelerators can be either privately or publicly funded and focus on a wide range of industries.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;The main differences between business incubators and accelerators are:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;The application process is open to anyone, but highly competitive. Y Combinator and TechStars have application acceptance rates between 1% and 3%.&lt;/li&gt;
+  &lt;li&gt;A seed investment in the startups is usually made, in exchange for equity. Typically, the investment is between US$20,000 and US$50,000 (or £10,000 and £50,000 in Europe)&lt;/li&gt;
+  &lt;li&gt;The focus is on small teams, not on individual founders. Accelerators consider that one person is insufficient to handle all the work associated with a startup.&lt;/li&gt;
+  &lt;li&gt;The startups must “graduate” by a given deadline, typically after 3 months. During this time, they receive intensive mentoring and training, and they are expected to iterate rapidly. Virtually all accelerators end their programs with a “Demo Day”, where the startups present to investors.&lt;/li&gt;
+  &lt;li&gt;Startups are accepted and supported in cohort batches or classes (the accelerator isn’t an on-demand resource). The peer support and feedback that the classes provide is an important advantage. If the accelerator doesn’t offer a common workspace, the teams will meet periodically.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;End quote from Wikipedia. This article gives a very accurate description of accelerators - for detailed rankings of accelerators navigate to &lt;a href=&quot;http://www.seedrankings.com/&quot;&gt;http://www.seedrankings.com/&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h3&gt;
+
+&lt;p&gt;There is an abundance of alternative funding forms out there. In this post I have tried to give a snapshot. In my the next section - “How to choose the right investor” - I want to cover some of the strategies and caveats when looking for the right investor.&lt;/p&gt;
+
+&lt;p&gt;Feel free to leave comments for feedback and pointing out mistakes :-)&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Fundraising 101</title>
+   <link href="http://blog.juliusdanek.de/finance/2015/06/19/fundraising-101/"/>
+   <updated>2015-06-19T00:00:00-07:00</updated>
+   <id>http://blog.juliusdanek.dehttp://blog.juliusdanek.de/finance/2015/06/19/fundraising-101</id>
+   <content type="html">&lt;p&gt;In the startup environment of 2015, a ton of money gets distributed daily to new companies by venture capital firms, angels, institutional investors, individuals and many more actors. Some people insist that we are seeing a major bubble rise. This might be true or not but that does not change the fact that fundraising is one of the &lt;em&gt;main activities&lt;/em&gt; of a startups CEO or key personnel. Many entrepreneurs that I met during my time at MIT recounted being more of a “Chief Fundraising Officer” than CEO for the first months of their companies.&lt;/p&gt;
+
+&lt;p&gt;This means that any head-start you can get on the fundraising process is of tremendous advantage. In a series of blogposts I want to share with you my insights from two MIT courses that I took on the matter, 10.407 - Money for Startups and 15.431 - Entreprenerial Finance. Disclaimer: I have not gone through funding processes myself yet - but I am planning to do so and I think meticulous preparation is the best way. Speaking with seasoned entrepreneurs, investors, reading blogs and my classes have helped me form a good theoretical idea that I would like to put forward to the reader. This is not a guide on how to pitch your company or how to approach potential investors. This is purely related to the finance process of fundraising. Another caveat: I will not be covering debt-financing either, this is purely equity financing related.&lt;/p&gt;
+
+&lt;div class=&quot;message&quot;&gt;Equity financing means giving up a percentage of your company in return for funds rather than taking on debts that will need to be repaid later on. In &lt;a href=&quot;https://en.wikipedia.org/wiki/Modigliani%E2%80%93Miller_theorem&quot; target=&quot;_blank&quot;&gt;finance theory&lt;/a&gt;, there is supposedly no difference between the two, albeit relying on the absence of transaction costs, taxes and a whole other lot of real life issues. This article gives a good overview over the discussion of &lt;a href=&quot;http://www.nfib.com/article/ital-50036/&quot; target=&quot;_blank&quot;&gt;debt- vs. equity financing&lt;/a&gt;&lt;/div&gt;
+
+&lt;p&gt;In the following articles I want to cover seven topics, starting with number 1 below. I will frequently link to other blogs and sites that have good insights for more detailed discussions. I would like to see the blog as a forum for discussion. If you disagree with any of the content, leave a comment. If you have any experience, leave a comment. The more discussion, the better.&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;&lt;a href=&quot;/finance/2015/06/20/sources-of-money/&quot;&gt;Sources of money&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;How to choose the right investor&lt;/li&gt;
+  &lt;li&gt;Valuing ventures&lt;/li&gt;
+  &lt;li&gt;Investment structures&lt;/li&gt;
+  &lt;li&gt;Termsheets - what do they look like and what are the most important items?&lt;/li&gt;
+  &lt;li&gt;The role of lawyers and legal counsel&lt;/li&gt;
+  &lt;li&gt;Negotiations&lt;/li&gt;
+  &lt;li&gt;The investor / VC perspective&lt;/li&gt;
+&lt;/ol&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Fallout 4 is coming!!</title>
+   <link href="http://blog.juliusdanek.de/general/2015/06/18/fallout-4/"/>
+   <updated>2015-06-18T00:00:00-07:00</updated>
+   <id>http://blog.juliusdanek.dehttp://blog.juliusdanek.de/general/2015/06/18/fallout-4</id>
+   <content type="html">&lt;h2 id=&quot;i-cant-believe-it&quot;&gt;I can’t believe it!&lt;/h2&gt;
+
+&lt;p&gt;Fallout 4 has been announced a few days ago at the E3. I have spent a ton of time playing both the immediate predecessors Fallout 3 and Fallout New Vegas as well as Fallout 2, back in the day.&lt;/p&gt;
+
+&lt;iframe width=&quot;560&quot; height=&quot;315&quot; src=&quot;https://www.youtube.com/embed/D5esyZPt5Jo&quot; frameborder=&quot;0&quot; allowfullscreen=&quot;&quot;&gt;&lt;/iframe&gt;
+
+&lt;p&gt;Why do I love this game so much? It has all the ingredients an incredible game needs in my eyes:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;It’s a role playing game with an amazing character and leveling system, skills that make sense and a system that levels up skills when used (your lockpicking skill will increase if you successfully pick a lock)&lt;/li&gt;
+  &lt;li&gt;It is extremely atmospheric.** Bethesda Softworks puts a lot of detailed thought into how to make a game world as credible as possible with dozens and dozens of characters, well-thought out story lines and wonderful landscapes&lt;/li&gt;
+  &lt;li&gt;The post-apocalyptic scenario: Come on, who wouldn’t want to see what the world would look like after a catastrophe - even though I obviously wouldn’t actually want this to happen.&lt;/li&gt;
+  &lt;li&gt;Pip-Boy&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Among the newly announced features is the possibility to build your own settlements and houses - something that I have dearly missed in Bethesda games since you could pseudo-develop your own settlement in ES III: Bloodmoon.&lt;/p&gt;
+
+&lt;p&gt;The game will be released on November 10 this year! I am so incredibly excited - I dearly hope I will have the time to play this game.&lt;/p&gt;
+
+&lt;p&gt;Until then I am playing Fallout Shelter - a game for iOS that Bethesda just released. It’s perfect for short breaks on your way to work.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/screenshot1.jpg&quot; alt=&quot;Fallout Shelter Screenshot 1&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/screenshot2.jpg&quot; alt=&quot;Fallout Shelter Screenshot 2&quot; /&gt;&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Useful Swift Shorthand Notations</title>
+   <link href="http://blog.juliusdanek.de/coding/2015/06/11/useful-swift-shorthand-notations/"/>
+   <updated>2015-06-11T00:00:00-07:00</updated>
+   <id>http://blog.juliusdanek.dehttp://blog.juliusdanek.de/coding/2015/06/11/useful-swift-shorthand-notations</id>
+   <content type="html">&lt;p&gt;While studying Swift I sometimes come across shorthand notation that can be extremely confusing at first. You don’t know the name of the particular shorthand and don’t know where to look it up at first but when you get the gist of it, it can be extremely useful. I will list a few here that I found to be interesting as I have not encountered them in other languages before.&lt;/p&gt;
+
+&lt;h2 id=&quot;terniary&quot;&gt;Terniary&lt;/h2&gt;
+
+&lt;p&gt;A great example is the &lt;a href=&quot;https://developer.apple.com/library/ios/documentation/Swift/Conceptual/Swift_Programming_Language/BasicOperators.html&quot;&gt;terniary&lt;/a&gt;(look under “Terniary Conditional Operator”). A terniary can look something like this:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-swift&quot; data-lang=&quot;swift&quot;&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CGFloat&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;blueControl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;on&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;?&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Pseudo-code:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;If self.blueControl is on (self.blueControl is a on/off switch), assign b a CGFloat with the value of 1. If it isn’t, assign the value of 0.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;In code, this is shorthand notation for:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-swift&quot; data-lang=&quot;swift&quot;&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;blueControl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;on&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CGFloat&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CGFloat&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Here’s another example that illustrates the use of terniaries&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-swift&quot; data-lang=&quot;swift&quot;&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Int&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Int&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Int&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;?&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;assigning-bools&quot;&gt;Assigning bools&lt;/h2&gt;
+
+&lt;p&gt;In another persons’ code I encountered this interesting notation:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-swift&quot; data-lang=&quot;swift&quot;&gt;&lt;span class=&quot;n&quot;&gt;youWon&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;opponentChoice&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Paper&amp;quot;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Pseudo-code:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;If opponentChoice equals string “Paper”, assign youWon the boolean value of true.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;or:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-swift&quot; data-lang=&quot;swift&quot;&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;opponentChoice&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Paper&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;youWon&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;true&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;youWon&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;false&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;I will update this as I find new shorthand notations!&lt;/p&gt;
+
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Why coding? - Part 2</title>
+   <link href="http://blog.juliusdanek.de/general/2015/06/10/why-coding%3F-part2/"/>
+   <updated>2015-06-10T00:00:00-07:00</updated>
+   <id>http://blog.juliusdanek.dehttp://blog.juliusdanek.de/general/2015/06/10/why-coding?-part2</id>
+   <content type="html">&lt;h2 id=&quot;why-coding&quot;&gt;Why coding?&lt;/h2&gt;
+
+&lt;!-- TODO: Finish inserting links into part 1 &amp; 2 --&gt;
+
+&lt;p&gt;I decided to split this post into two parts. Part 1 explaining what led up to me starting to code and part 2 explaining why I enjoy coding.&lt;/p&gt;
+
+&lt;p class=&quot;message&quot;&gt;
+	Julius, why have you started coding, what are you hoping to accomplish?
+&lt;/p&gt;
+
+&lt;h1 id=&quot;codecademy&quot;&gt;Codecademy&lt;/h1&gt;
+
+&lt;p&gt;I started off easy, learning HTML and CSS, which, quite frankly, I do not enjoy as much. They are pretty simple but do not actually have much to do with coding or programming. 
+When I came to JavaScript and jQuery, it got more interesting.&lt;/p&gt;
+
+&lt;p&gt;For people with no exposure to coding, a quick explanation of these languages:&lt;/p&gt;
+
+&lt;dl&gt;
+  &lt;dt&gt;HyperText Markup Language (HTML)&lt;/dt&gt;
+  &lt;dd&gt;The language used to describe and define the content of a Web page. HTML is found throughout the web and basically acts as a scaffolding for a website. Inside the scaffolding you can place content like texts, images, texts, etc. You can see what html looks like &lt;a href=&quot;http://www.w3schools.com/html/tryit.asp?filename=tryhtml_basic_document&quot;&gt;here&lt;/a&gt;&lt;/dd&gt;
+
+  &lt;dt&gt;Cascading Style Sheets (CSS)&lt;/dt&gt;
+  &lt;dd&gt;Used to describe the appearance of Web content. CSS is like a fancy interior designer that makes sure that your website looks awesome, has nice colors and that all the same elements like a paragraph or a header look the same. If you are Firefox you can see what your websites look like without CSS by going to &quot;View --&amp;gt; Pagestyle --&amp;gt; No Style&quot;. This sometimes also happens to websites, for example when you go on Facebook and it just shows a white background and blue links, that means that the CSS files failed to load.&lt;/dd&gt;
+
+  &lt;dt&gt;JavaScript (JS)&lt;/dt&gt;
+  &lt;dd&gt;The programming language used to build advanced Web sites and applications. Javascript is a &quot;real&quot; programming language. You can research it in more detail online but in the context of a simple website it basically powers animations, button clicks, and other dynamic interactions. You can liken it to the doors and lightswitches in your house.
+  jQuery is an an extension of JavaScript that allows to manipulate effects easily on your website, much like a toolbox. 
+   &lt;/dd&gt;
+&lt;/dl&gt;
+
+&lt;p&gt;JavaScript first introduced me to basic programming concepts such as if statements, for loops, variable declarations, functions, etc. To show the usage of these concepts, codecademy let’s you code very simple programs like basic calculators, grocery lists, and so on.&lt;/p&gt;
+
+&lt;p&gt;It was not until I started learning Python however that coding fully ignited my passion. Python is generally seen as a language that is easy to learn and that can be applied in many different contexts. Below is a very simple and elegant example of how you can add two numbers by defining a function.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;o&quot;&gt;//&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Create&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;that&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;takes&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;two&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;arguments&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;and&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;returns&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;the&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;sum&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;of&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;those&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;arguments&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;adder&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;
+
+&lt;span class=&quot;o&quot;&gt;//&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Call&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;the&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;function&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;adder&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;6&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;o&quot;&gt;//&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;8&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;The logic behind it is extremely powerful and intuitive. Python exposed me to the first problems that required me to really sit down for several hours and just do problem solving, for example:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Write a function that takes a list of numbers and only returns those that are divisible by 3.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;There are many many ways to solve this. The feeling you get when the desired answers finally prints to your screen and without error is incredible. This feeling of instant gratification is incredible and I have not encountered it elsewhere. Before computer programming, the only time I could ever concentrate continuously for several hours on thing was when solving math problems that were hard but had a solution somewhere on the horizon.&lt;/p&gt;
+
+&lt;p&gt;I realize that my teaching myself I will hardly ever challenge a computer science major in their own field, but teaching myself the practical skills while simultaneously diving into what constitutes the underlying structure the digital and tech world is something that I yearn to do. Learning how to code seems like the perfect way to do it and I am enjoying it tremendously - just as the MIT motto says: ‘mens et manus’.&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Why coding? - Part 1</title>
+   <link href="http://blog.juliusdanek.de/general/2015/06/10/why-coding%3F-part1/"/>
+   <updated>2015-06-10T00:00:00-07:00</updated>
+   <id>http://blog.juliusdanek.dehttp://blog.juliusdanek.de/general/2015/06/10/why-coding?-part1</id>
+   <content type="html">&lt;h2 id=&quot;why-coding&quot;&gt;Why coding?&lt;/h2&gt;
+
+&lt;!-- Add part1 and part 2 hyperlinks so they are connected --&gt;
+&lt;p&gt;I decided to split this post into two parts. Part 1 explaining what led up to me starting to code and part 2 explaining why I enjoy coding.&lt;/p&gt;
+
+&lt;p class=&quot;message&quot;&gt;
+	Julius, why have you started coding, what are you hoping to accomplish?
+&lt;/p&gt;
+
+&lt;p&gt;I have been asked this question many times over the past months. My interest in technology and computers reaches far back. In my childhood and teenage years however it was rather geared or “misdirected” towards computer games (even though I do not regret a single moment playing all those awesome games).&lt;/p&gt;
+
+&lt;h1 id=&quot;economics-and-identity-crisis&quot;&gt;Economics and identity crisis&lt;/h1&gt;
+
+&lt;p&gt;After graduating high school and an identity crisis with no real idea what my real interests where I decided to study economics - it seemed like a reasonable choice at the time, offering job security and heck, everybody was doing it! It promised to apply mathematics to solve real world problems and that really intrigued me.&lt;/p&gt;
+
+&lt;p&gt;I did enjoy studying economics, I do believe it is one of the most profound and influential academic fields (whether it is a science is at least debatable: &lt;a href=&quot;http://www.nytimes.com/2013/10/21/opinion/yes-economics-is-a-science.html&quot;&gt;yes&lt;/a&gt;, &lt;a href=&quot;http://www.thecrimson.com/article/2013/12/13/economics-science-wang/&quot;&gt;no&lt;/a&gt;, &lt;a href=&quot;http://www.project-syndicate.org/commentary/robert-j--shilleron-whether-he-is-a-scientist&quot;&gt;maybe&lt;/a&gt;). The mathematical problems were challenging and some of the models very interesting. However, besides on paper I did not feel like I was actually accomplishing much.&lt;/p&gt;
+
+&lt;p&gt;Computer science was not on my radar at all. My cousin &lt;a href=&quot;https://de.linkedin.com/in/fabianruffy&quot;&gt;Fabian&lt;/a&gt; was a computer science major at LMU München and when I observed him studying all the Boolean logic and assembly language I was happy that I was doing the ‘easier’ economics math work.&lt;/p&gt;
+
+&lt;h1 id=&quot;back-to-tech&quot;&gt;Back to tech&lt;/h1&gt;
+
+&lt;p&gt;In 2011 then, with an internship in VC in New York I started getting exposure to finance and its role in facilitating technological progress. Being exposed to many ideas and entrepreneurs made me curious about the realm of tech and startups and I started reading up on ideas, blogs, newspaper articles, etc. When I came to MIT originally a year ago for my Master’s degree, I was planning on either&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;launching my own company or&lt;/li&gt;
+  &lt;li&gt;working at a VC firm&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The environment at MIT however drove me to try out something else completely, coding. I had built a website before, the previous version of &lt;a href=&quot;http://entrefem.de&quot;&gt;www.entrefem.de&lt;/a&gt; with the help of a friend, a template and lots of patchwork (my friend told me I totally messed up the code more than once). This time however I wanted to get down to the nit and grit. I felt that being at MIT I did not want to be reduced only to me being a ‘Sloanie’. I wanted to be on the tech side as well, even if it was just basics and talking the lingo.&lt;/p&gt;
+
+&lt;p&gt;I began my journey with a popular starting point:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;www.cadecademy.org&quot;&gt;Codecademy&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Codecademy was a great starting point as it was&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Free&lt;/li&gt;
+  &lt;li&gt;Designed for beginners&lt;/li&gt;
+  &lt;li&gt;Motivational&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;And so I began taking coding classes online and at MIT, steadily being sucked into the world of computer science.&lt;/p&gt;
+
+&lt;p&gt;Read more in part 2!&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Hello World!</title>
+   <link href="http://blog.juliusdanek.de/2015/06/09/hello-world/"/>
+   <updated>2015-06-09T00:00:00-07:00</updated>
+   <id>http://blog.juliusdanek.dehttp://blog.juliusdanek.de/2015/06/09/hello-world</id>
+   <content type="html">&lt;h2 id=&quot;hi-welcome-to-my-blog&quot;&gt;Hi! Welcome to my blog.&lt;/h2&gt;
+
+&lt;p&gt;Why start a blog in the first place? As I graduated from &lt;a href=&quot;http://mit.edu&quot;&gt;MIT&lt;/a&gt; last Friday, June 5th, I decided to move out to California to continue the coding education that I began last year in September. Setting up my own website and blog seems like a logical extension of my continued practical education.&lt;/p&gt;
+
+&lt;p&gt;What do I want to achieve during my time in Cali? I am not sure whether I will be able to make it as a fully fledged software developer, the more I learn the more I realize that there is so much more to it then simply learning how to code and my visa simply isn’t long enough to give me enough time to compete with the people that major in computer science. I do however want to get an understanding that is thorough enough so I can&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;understand the basic principles of programming&lt;/li&gt;
+  &lt;li&gt;talk the lingo of computer scientists&lt;/li&gt;
+  &lt;li&gt;be able to read and understand snippets of code&lt;/li&gt;
+  &lt;li&gt;explore to connect the different pieces of code through requests, API’s, databases, etc.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;My aim is ultimately to completely understand the process of how a web application or an iOS application works. How does it connect to a database? How does it communicate with a webserver? What are the current trends in the industry? I am very excited to be exploring these questions in the next couple of months.&lt;/p&gt;
+
+&lt;p&gt;In the end I would like to be able to use the technical skills I learned in conjunction with the finance and business skills that I have acquired during my education both at MIT and at Utrecht. The role of a product manager seems to perfectly fit this description. Ideally, I would like to grow into this role by starting my own business.&lt;/p&gt;
+
+&lt;p&gt;Over the next weeks and months I will be blogging about all kinds of things:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Technical posts explaining what projects I do, I did them and what resources I used&lt;/li&gt;
+  &lt;li&gt;Thoughts about entrepreneurship (I know there is lot of stuff about this out there already but this will be from my perspective)&lt;/li&gt;
+  &lt;li&gt;My journey, what I am going through, where I am, what I am doing&lt;/li&gt;
+  &lt;li&gt;Random Ramblings&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;I am excited to be writing about these things and having people be part of my journey.&lt;/p&gt;
+
+&lt;p&gt;Julius&lt;/p&gt;
+</content>
+ </entry>
+ 
+
+</feed>
