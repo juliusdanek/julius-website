@@ -1,7 +1,7 @@
 ---
 layout: page
 title: About
-permalink: http://juliusdanek.de/blog/about
+permalink: blog/about
 ---
 
 <img src="{{ site.url }}/assets/images/julius_square_edited.jpg" class="about-img">

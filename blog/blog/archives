@@ -59,16 +59,16 @@
       
     
       
+    
+      
         
-          <a class="sidebar-nav-item active" href="/archives/">Archives</a>
+          <a class="sidebar-nav-item" href="/blog/about">About</a>
         
       
     
       
-    
-      
         
-          <a class="sidebar-nav-item" href="/http:/juliusdanek.de/blog/about">About</a>
+          <a class="sidebar-nav-item active" href="/blog/archives">Archives</a>
         
       
     
