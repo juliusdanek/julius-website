@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
  <title>Julius' Blog</title>
- <link href="http://blog.juliusdanek.dehttp://blog.juliusdanek.de/atom.xml" rel="self"/>
- <link href="http://blog.juliusdanek.dehttp://blog.juliusdanek.de/"/>
- <updated>2015-07-16T14:19:45-07:00</updated>
- <id>http://blog.juliusdanek.de</id>
+ <link href="http://juliusdanek.de/bloghttp://juliusdanek.de/blog/atom.xml" rel="self"/>
+ <link href="http://juliusdanek.de/bloghttp://juliusdanek.de/blog/"/>
+ <updated>2015-07-16T14:25:30-07:00</updated>
+ <id>http://juliusdanek.de/blog</id>
  <author>
    <name>Julius Danek</name>
    <email>juliusdanek@gmail.com</email>
@@ -14,9 +14,9 @@
  
  <entry>
    <title>Building my first iPhone apps</title>
-   <link href="http://blog.juliusdanek.de/coding/2015/06/23/building-my-first-app%202/"/>
+   <link href="http://juliusdanek.de/blog/coding/2015/06/23/building-my-first-app%202/"/>
    <updated>2015-06-23T00:00:00-07:00</updated>
-   <id>http://blog.juliusdanek.dehttp://blog.juliusdanek.de/coding/2015/06/23/building-my-first-app 2</id>
+   <id>http://juliusdanek.de/bloghttp://juliusdanek.de/blog/coding/2015/06/23/building-my-first-app 2</id>
    <content type="html">&lt;p&gt;Over the past two weeks I have been following the udacity.com &lt;a href=&quot;https://www.udacity.com/course/ios-developer-nanodegree--nd003&quot;&gt;nanodegree for the Swift programming language&lt;/a&gt;. What started off fairly slow with an introductory course to Swift and a first project, building an app that modified your voice when recording, continued with an extremely steep learning curve for the next project - a meme creator application.&lt;/p&gt;
 
 &lt;p&gt;In this app, the user would be able to take choose an image or take one with his/her camera and amend “meme-style” text to it. Then the user would be able to save or share the created memes and look at all the created memes in a table. What sounds very easy was actually quite challenging as it involved several important concepts that needed to be applied in order for the application to function:&lt;/p&gt;
@@ -84,9 +84,9 @@
  
  <entry>
    <title>Sources of money</title>
-   <link href="http://blog.juliusdanek.de/finance/2015/06/20/sources-of-money/"/>
+   <link href="http://juliusdanek.de/blog/finance/2015/06/20/sources-of-money/"/>
    <updated>2015-06-20T00:00:00-07:00</updated>
-   <id>http://blog.juliusdanek.dehttp://blog.juliusdanek.de/finance/2015/06/20/sources-of-money</id>
+   <id>http://juliusdanek.de/bloghttp://juliusdanek.de/blog/finance/2015/06/20/sources-of-money</id>
    <content type="html">&lt;p&gt;This is the first post in a series about fundraising for entrepreneurs. For an overview, navigate to &lt;a href=&quot;/finance/2015/06/19/fundraising-101/&quot;&gt;fundraising 101&lt;/a&gt;.&lt;/p&gt;
 
 &lt;p&gt;Sources of money and actors in the venture financing business are abundant. There are angels, accelerators, incubators, VC funds, strategic funds, institutional investors, friends and family, grants, and so on and so on. How should you know what is right for you and what is not? VC money definitely is not always the right answer, as this &lt;a href=&quot;http://www.fastcompany.com/3036130/hit-the-ground-running/why-venture-capital-wasnt-right-for-me-and-15-alternative-funding-sou&quot;&gt;blogpost by Laurie Peterson&lt;/a&gt; perfectly illustrates. She also provides an excellent overview over the type of sources of funding that you can leverage next to traditional VC funding.&lt;/p&gt;
@@ -214,9 +214,9 @@ There is an abundance of entrepreneurship competitions throughout the US and Eur
  
  <entry>
    <title>Fundraising 101</title>
-   <link href="http://blog.juliusdanek.de/finance/2015/06/19/fundraising-101/"/>
+   <link href="http://juliusdanek.de/blog/finance/2015/06/19/fundraising-101/"/>
    <updated>2015-06-19T00:00:00-07:00</updated>
-   <id>http://blog.juliusdanek.dehttp://blog.juliusdanek.de/finance/2015/06/19/fundraising-101</id>
+   <id>http://juliusdanek.de/bloghttp://juliusdanek.de/blog/finance/2015/06/19/fundraising-101</id>
    <content type="html">&lt;p&gt;In the startup environment of 2015, a ton of money gets distributed daily to new companies by venture capital firms, angels, institutional investors, individuals and many more actors. Some people insist that we are seeing a major bubble rise. This might be true or not but that does not change the fact that fundraising is one of the &lt;em&gt;main activities&lt;/em&gt; of a startups CEO or key personnel. Many entrepreneurs that I met during my time at MIT recounted being more of a “Chief Fundraising Officer” than CEO for the first months of their companies.&lt;/p&gt;
 
 &lt;p&gt;This means that any head-start you can get on the fundraising process is of tremendous advantage. In a series of blogposts I want to share with you my insights from two MIT courses that I took on the matter, 10.407 - Money for Startups and 15.431 - Entreprenerial Finance. Disclaimer: I have not gone through funding processes myself yet - but I am planning to do so and I think meticulous preparation is the best way. Speaking with seasoned entrepreneurs, investors, reading blogs and my classes have helped me form a good theoretical idea that I would like to put forward to the reader. This is not a guide on how to pitch your company or how to approach potential investors. This is purely related to the finance process of fundraising. Another caveat: I will not be covering debt-financing either, this is purely equity financing related.&lt;/p&gt;
@@ -240,9 +240,9 @@ There is an abundance of entrepreneurship competitions throughout the US and Eur
  
  <entry>
    <title>Fallout 4 is coming!!</title>
-   <link href="http://blog.juliusdanek.de/general/2015/06/18/fallout-4/"/>
+   <link href="http://juliusdanek.de/blog/general/2015/06/18/fallout-4/"/>
    <updated>2015-06-18T00:00:00-07:00</updated>
-   <id>http://blog.juliusdanek.dehttp://blog.juliusdanek.de/general/2015/06/18/fallout-4</id>
+   <id>http://juliusdanek.de/bloghttp://juliusdanek.de/blog/general/2015/06/18/fallout-4</id>
    <content type="html">&lt;h2 id=&quot;i-cant-believe-it&quot;&gt;I can’t believe it!&lt;/h2&gt;
 
 &lt;p&gt;Fallout 4 has been announced a few days ago at the E3. I have spent a ton of time playing both the immediate predecessors Fallout 3 and Fallout New Vegas as well as Fallout 2, back in the day.&lt;/p&gt;
@@ -272,9 +272,9 @@ There is an abundance of entrepreneurship competitions throughout the US and Eur
  
  <entry>
    <title>Useful Swift Shorthand Notations</title>
-   <link href="http://blog.juliusdanek.de/coding/2015/06/11/useful-swift-shorthand-notations/"/>
+   <link href="http://juliusdanek.de/blog/coding/2015/06/11/useful-swift-shorthand-notations/"/>
    <updated>2015-06-11T00:00:00-07:00</updated>
-   <id>http://blog.juliusdanek.dehttp://blog.juliusdanek.de/coding/2015/06/11/useful-swift-shorthand-notations</id>
+   <id>http://juliusdanek.de/bloghttp://juliusdanek.de/blog/coding/2015/06/11/useful-swift-shorthand-notations</id>
    <content type="html">&lt;p&gt;While studying Swift I sometimes come across shorthand notation that can be extremely confusing at first. You don’t know the name of the particular shorthand and don’t know where to look it up at first but when you get the gist of it, it can be extremely useful. I will list a few here that I found to be interesting as I have not encountered them in other languages before.&lt;/p&gt;
 
 &lt;h2 id=&quot;terniary&quot;&gt;Terniary&lt;/h2&gt;
@@ -334,9 +334,9 @@ There is an abundance of entrepreneurship competitions throughout the US and Eur
  
  <entry>
    <title>Why coding? - Part 2</title>
-   <link href="http://blog.juliusdanek.de/general/2015/06/10/why-coding%3F-part2/"/>
+   <link href="http://juliusdanek.de/blog/general/2015/06/10/why-coding%3F-part2/"/>
    <updated>2015-06-10T00:00:00-07:00</updated>
-   <id>http://blog.juliusdanek.dehttp://blog.juliusdanek.de/general/2015/06/10/why-coding?-part2</id>
+   <id>http://juliusdanek.de/bloghttp://juliusdanek.de/blog/general/2015/06/10/why-coding?-part2</id>
    <content type="html">&lt;h2 id=&quot;why-coding&quot;&gt;Why coding?&lt;/h2&gt;
 
 &lt;!-- TODO: Finish inserting links into part 1 &amp; 2 --&gt;
@@ -396,9 +396,9 @@ When I came to JavaScript and jQuery, it got more interesting.&lt;/p&gt;
  
  <entry>
    <title>Why coding? - Part 1</title>
-   <link href="http://blog.juliusdanek.de/general/2015/06/10/why-coding%3F-part1/"/>
+   <link href="http://juliusdanek.de/blog/general/2015/06/10/why-coding%3F-part1/"/>
    <updated>2015-06-10T00:00:00-07:00</updated>
-   <id>http://blog.juliusdanek.dehttp://blog.juliusdanek.de/general/2015/06/10/why-coding?-part1</id>
+   <id>http://juliusdanek.de/bloghttp://juliusdanek.de/blog/general/2015/06/10/why-coding?-part1</id>
    <content type="html">&lt;h2 id=&quot;why-coding&quot;&gt;Why coding?&lt;/h2&gt;
 
 &lt;!-- Add part1 and part 2 hyperlinks so they are connected --&gt;
@@ -449,9 +449,9 @@ When I came to JavaScript and jQuery, it got more interesting.&lt;/p&gt;
  
  <entry>
    <title>Hello World!</title>
-   <link href="http://blog.juliusdanek.de/2015/06/09/hello-world/"/>
+   <link href="http://juliusdanek.de/blog/2015/06/09/hello-world/"/>
    <updated>2015-06-09T00:00:00-07:00</updated>
-   <id>http://blog.juliusdanek.dehttp://blog.juliusdanek.de/2015/06/09/hello-world</id>
+   <id>http://juliusdanek.de/bloghttp://juliusdanek.de/blog/2015/06/09/hello-world</id>
    <content type="html">&lt;h2 id=&quot;hi-welcome-to-my-blog&quot;&gt;Hi! Welcome to my blog.&lt;/h2&gt;
 
 &lt;p&gt;Why start a blog in the first place? As I graduated from &lt;a href=&quot;http://mit.edu&quot;&gt;MIT&lt;/a&gt; last Friday, June 5th, I decided to move out to California to continue the coding education that I began last year in September. Setting up my own website and blog seems like a logical extension of my continued practical education.&lt;/p&gt;
