@@ -1,0 +1,22 @@
+# Permalinks
+#
+# Use of `relative_permalinks` ensures post links from the index work properly.
+permalink:           pretty
+relative_permalinks: true
+
+# Setup
+title:               "Julius' Blog"
+tagline:             "Lifes's an adventure"
+description:         'A blog by Julius Danek. For more details check out the about me, archives and my website'
+url:                 http://blog.juliusdanek.de
+baseurl:             'http://blog.juliusdanek.de'
+paginate:            2
+
+# About/contact
+author:
+  name:              Julius Danek
+  url:               http://juliusdanek.de
+  email:             juliusdanek@gmail.com
+
+# # Custom vars
+# version:             1.0.0

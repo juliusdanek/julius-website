@@ -1,0 +1,89 @@
+@import url(http://weloveiconfonts.com/api/?family=zocial);
+
+/* zocial */
+[class*="zocial-"]:before {
+  font-family: 'zocial', sans-serif;
+}
+
+html, body {
+	height: 100%;
+}
+
+.navbar {
+	background-color: #F7F7F7;
+	border-bottom: black solid 1px;
+}
+
+.jumbotron {
+	background: url(../images/_MG_8347-xlarge_x3.jpg) no-repeat center center; 
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+    height: 100%;
+    overflow: hidden;
+    margin: 0;
+}
+/*
+.about-me p.active {
+	display: block;
+}
+
+.about-me img.active {
+	display: block;
+}
+*/
+.active {
+	display: block;
+}
+
+.about-me img {	
+	display: none;
+	margin-bottom: 10px;
+	max-width: 50%;
+}
+
+.about-me p {
+	margin-top: 10px;
+	display: none;
+}
+
+.about-me {
+	min-height: 500px;
+}
+
+.about-me ul {
+	display: none;
+}
+
+.about-me button {
+	margin-bottom: 10px;
+}
+
+.about-me .col-sm-6 {
+	padding: 0;
+}
+
+.contact li {
+	font-size: 3em;
+	margin: 0.25em 0.25em;
+	display: inline-block;
+}
+
+@media screen and (max-width: 735px) {
+	.jumbotron {
+		height: 60%;
+		background-image: url(../images/_MG_8347-large_x2.jpg);
+		position: relative;
+	}
+
+	.about-me {
+		min-height: 800px;
+	}
+
+	.about-me img {
+		max-width: 100%;
+	}
+}
+
+
