@@ -8,7 +8,7 @@ relative_permalinks: true
 title:               "Julius' Blog"
 tagline:             "Lifes's an adventure"
 description:         'A blog by Julius Danek. For more details check out the about me, archives and my website'
-url:                 http://juliusdanek.de/blog
+url:                 http://juliusdanek.de/blog/
 baseurl:             /blog
 paginate:            2
 
