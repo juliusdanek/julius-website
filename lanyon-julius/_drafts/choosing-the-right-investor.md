@@ -9,7 +9,7 @@ comments: true
 
 ## What matters when choosing the source of money
 
-In this section I will highlight a few findings without going into depth and numbers in every heading. I highly recommend reading [this report on VC trends](http://www.ey.com/Publication/vwLUAssets/Global_venture_capital_insights_and_trends_2014/$FILE/EY_Global_VC_insights_and_trends_report_2014.pdf) that is the source for many of my insights. 
+In this section I will highlight a few findings without going into depth and numbers in every heading. I highly recommend reading [this report on VC trends](http://www.ey.com/Publication/vwLUAssets/Global_venture_capital_insights_and_trends_2014/$FILE/EY_Global_VC_insights_and_trends_report_2014.pdf) that is the source for many of the numbers that I cite. 
 
 ### Region
 
