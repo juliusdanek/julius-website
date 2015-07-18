@@ -4,7 +4,7 @@
  <title>Julius' Blog</title>
  <link href="http://juliusdanek.de/blog//blog/atom.xml" rel="self"/>
  <link href="http://juliusdanek.de/blog//blog/"/>
- <updated>2015-07-17T20:18:40-07:00</updated>
+ <updated>2015-07-17T20:24:26-07:00</updated>
  <id>http://juliusdanek.de/blog/</id>
  <author>
    <name>Julius Danek</name>
@@ -13,16 +13,13 @@
 
  
  <entry>
-   <title>Persistent Pins Tutorial</title>
-   <link href="http://juliusdanek.de/blog//2015/07/14/persistent-pins-tutorial/"/>
+   <title>Swift Tutorial -  Persistent Annotations in MapKit with Core Data</title>
+   <link href="http://juliusdanek.de/blog//coding/2015/07/14/persistent-pins-tutorial/"/>
    <updated>2015-07-14T00:00:00-07:00</updated>
-   <id>http://juliusdanek.de/blog//blog/2015/07/14/persistent-pins-tutorial</id>
-   <content type="html">
-&lt;h1 id=&quot;swift-tutorial-persistent-annotations-in-mapkit-with-core-data&quot;&gt;Swift Tutorial: Persistent Annotations in MapKit with Core Data&lt;/h1&gt;
+   <id>http://juliusdanek.de/blog//blog/coding/2015/07/14/persistent-pins-tutorial</id>
+   <content type="html">&lt;h2 id=&quot;persistent-annotations-in-mapkit&quot;&gt;Persistent Annotations in MapKit&lt;/h2&gt;
 
-&lt;h2 id=&quot;persistent-annotations-in-mapkit&quot;&gt;Persistent Annotations in MapKit&lt;/h2&gt;
-
-&lt;p&gt;Hi everyone, in this tutorial we will use CoreData to persist pin annotations on a map using Apple’s MapKit. Basic familiarity with CoreData and iOS development is assumed. This tutorial was done for an iPhone 6 and iOS 8.&lt;/p&gt;
+&lt;p&gt;Hi everyone, in this tutorial we will use CoreData to persist pin annotations on a map using Apple’s MapKit in six simple steps. Basic familiarity with CoreData and iOS development is assumed. This tutorial was done for an iPhone 6 and iOS 8.&lt;/p&gt;
 
 &lt;p&gt;In Persistent-Pins we will drop pins on a mapView using the UILongPressGestureRecognizer. Dropped Pins will be immediately saved to a CoreData database. Pins can be deleted with taps. On restart, all placed Pins will have persisted on the map. My Github contains the finished project with comments, the steps can be found as commits.&lt;/p&gt;
 
@@ -32,13 +29,16 @@
 
 &lt;p&gt;Let’s start by initializing the project. Create a new project in Xcode, starting from a single view application. Choose Swift as language and enable CoreData by ticking the “Use Core Data” box.&lt;/p&gt;
 
+&lt;p&gt;&lt;img src=&quot;/assets/images/start-model.png&quot; alt=&quot;Start model picture&quot; /&gt;&lt;/p&gt;
+
 &lt;p&gt;Your project is now ready. Checkout how CoreData is initialized in the AppDelegate.&lt;/p&gt;
 
-&lt;p&gt;Let’s navigate to our model, “Persistent-Pins”. This is where we are going to define our entity. Let’s add one entity and name it “Pin”. Add two attributes to your new “Pin” entity. “latitude” and “longitude” are both going to be attributes and will be of type “Double”. We will store our Pin’s latitude and longitude in these properties.&lt;/p&gt;
-
-&lt;h4 id=&quot;step-two---setting-up-our-managed-object&quot;&gt;Step two - Setting up our managed object&lt;/h4&gt;
+&lt;p&gt;Let’s navigate to our model, “Persistent-Pins”. This is where we are going to define our entity. Let’s add one entity and name it “Pin”. Add two attributes to your new “Pin” entity. “latitude” and “longitude” are both going to be attributes and will be of type “Double”. We will store our Pin’s latitude and longitude in these properties. 
+####Step two - Setting up our managed object&lt;/p&gt;
 
 &lt;p&gt;Next, we are going to set up our managed object or entity. Navigate to your model “Persistent Pins” and go on “Editor”. Select “create NSManaged Object subclass…”. Choose Persistent Pins, then Pin, then change the language to Swift and save the file to your project folder (select the right group - persistent pins - in the group dropdown).&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/pin-attribute.png&quot; alt=&quot;pin attributes picture&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;At the top of the file, create another import statement for MapKit. We will need CoreData to save our Pins to our model and we will need MapKit to make the Pins that we save a subclass of MKAnnotation - this will allow us to populate our map with Pins directly from CoreData.&lt;/p&gt;
 
@@ -75,6 +75,8 @@
 
 &lt;p&gt;&lt;strong&gt;Finally, navigate to your model and change the class in your Pin entity to “Pin”&lt;/strong&gt;&lt;/p&gt;
 
+&lt;p&gt;&lt;img src=&quot;/assets/images/pin-class.png&quot; alt=&quot;pin class picture&quot; /&gt;&lt;/p&gt;
+
 &lt;p&gt;Great, we are finished creating our custom object and are done with step one. This should be the finished code:&lt;/p&gt;
 
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-swift&quot; data-lang=&quot;swift&quot;&gt;&lt;span class=&quot;k&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Foundation&lt;/span&gt;
@@ -103,9 +105,11 @@
 
 	&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;h4 id=&quot;step-two----setting-up-our-ui-and-our-viewcontroller&quot;&gt;Step two – setting up our UI and our ViewController&lt;/h4&gt;
+&lt;h4 id=&quot;step-three----setting-up-our-ui-and-our-viewcontroller&quot;&gt;Step three – setting up our UI and our ViewController&lt;/h4&gt;
 
 &lt;p&gt;Navigate to storyboard and drag a MapKit View onto your viewcontroller. Set the constraints so the MapView fills out the entire controller. Also, do not forget to enable MapKit in your projects capabilities. Go to persistent Pins and enable “Maps” under capabilities.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/turnon-mapkit.png&quot; alt=&quot;mapkit picture&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Let’s create an outlet for our mapView in our ViewController file. ctrl + drag your mapView into your ViewController using the assistant editor and add an outlet named “mapView”. Do not forget to import MapKit into your ViewController and set your ViewController as MKMapViewDelegate.&lt;/p&gt;
 
@@ -134,7 +138,7 @@
 
 &lt;p&gt;As you can see, the UILongPressGestureRecognizer us linked to a method called dropPin. We will implement that method next.&lt;/p&gt;
 
-&lt;h4 id=&quot;step-three---the-droppin-method&quot;&gt;Step three - the dropPin method&lt;/h4&gt;
+&lt;h4 id=&quot;step-four---the-droppin-method&quot;&gt;Step four - the dropPin method&lt;/h4&gt;
 
 &lt;p&gt;Let’s define our dropPin method. We will have to do three things:&lt;/p&gt;
 
@@ -184,7 +188,7 @@
 
 &lt;p&gt;We will instantiate the appDelegate so we can use its methods. Then we proceed to instantiate a pin as our Pin class. We will initialize it with the coordinates from our touchMapCoordinate and use the appDelegate context as our context. Then we add the pin to our map view and we save our context - we could do this at another point too but it seems smart to do it here. We just successfully added a Pin to our CoreData model!&lt;/p&gt;
 
-&lt;h4 id=&quot;step-four---fetching-our-pins-and-adding-them-to-our-map-when-starting-our-app&quot;&gt;Step four - fetching our Pins and adding them to our map when starting our app&lt;/h4&gt;
+&lt;h4 id=&quot;step-five---fetching-our-pins-and-adding-them-to-our-map-when-starting-our-app&quot;&gt;Step five - fetching our Pins and adding them to our map when starting our app&lt;/h4&gt;
 
 &lt;p&gt;Alright, let’s make sure that the pins that we insert into CoreData also get fetched when we need them, i.e. when the mapView loads. Let’s first change some of the logic that we implemented before. Import CoreData to our ViewController. Let’s also declare two implicitly unwrapped variables in ViewController:&lt;/p&gt;
 
@@ -217,7 +221,7 @@ Do not forget to adjust the dropPin method accordingly! Delete the declaration o
 
 &lt;p&gt;Great, now we are able to see the pins that we add. Let’s try it out.&lt;/p&gt;
 
-&lt;h4 id=&quot;step-five---deleting-pins&quot;&gt;Step five - deleting pins&lt;/h4&gt;
+&lt;h4 id=&quot;step-six---deleting-pins&quot;&gt;Step six - deleting pins&lt;/h4&gt;
 
 &lt;p&gt;This step is remarkably easy. We will implement one of our delegate methods - didSelectAnnotation. The wonderful thing is that all mapView.annotations are saved as an array - an array of Pins! That means the selected annotation can always be casted as a Pin and deleted from the managed context. The method should look like this:&lt;/p&gt;
 

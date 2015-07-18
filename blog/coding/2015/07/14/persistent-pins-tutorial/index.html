@@ -1,9 +1,123 @@
+<!DOCTYPE html>
+<html lang="en-us">
 
-<h1 id="swift-tutorial-persistent-annotations-in-mapkit-with-core-data">Swift Tutorial: Persistent Annotations in MapKit with Core Data</h1>
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
 
-<h2 id="persistent-annotations-in-mapkit">Persistent Annotations in MapKit</h2>
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 
-<p>Hi everyone, in this tutorial we will use CoreData to persist pin annotations on a map using Apple’s MapKit. Basic familiarity with CoreData and iOS development is assumed. This tutorial was done for an iPhone 6 and iOS 8.</p>
+  <title>
+    
+      Swift Tutorial -  Persistent Annotations in MapKit with Core Data &middot; Julius' Blog
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/blog/public/css/poole.css">
+  <link rel="stylesheet" href="/blog/public/css/syntax.css">
+  <link rel="stylesheet" href="/blog/public/css/lanyon.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/blog/public/favicon_large.png">
+  <link rel="shortcut icon" href="/blog/public/favicon_32x32.png">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body>
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-item">
+    <img class="sidebar-img" src="http://juliusdanek.de/blog//assets/images/julius_square_edited.jpg">
+    <p>A blog by Julius Danek. For more details check out the about me, archives and my website</p>
+  </div>
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/blog/">Posts</a>
+
+    
+
+    
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/blog/about/">About</a>
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/blog/archives/">Archives</a>
+        
+      
+    
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+    <a class="sidebar-nav-item" href="http://juliusdanek.de" target="_blank">Website</a>
+  </nav>
+
+  <div class="sidebar-item">
+    <p>
+      &copy; 2015. All rights reserved. Built with <a href="https://github.com/poole/lanyon" target="_blank">Lanyon</a> by <a href="https://twitter.com/mdo" target="_blank">@mdo</a>.
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/blog/" title="Home">Julius' Blog</a>
+            <small>Lifes's an adventure</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post">
+  <h1 class="post-title">Swift Tutorial -  Persistent Annotations in MapKit with Core Data</h1>
+  <span class="post-date">14 Jul 2015</span>
+  <h2 id="persistent-annotations-in-mapkit">Persistent Annotations in MapKit</h2>
+
+<p>Hi everyone, in this tutorial we will use CoreData to persist pin annotations on a map using Apple’s MapKit in six simple steps. Basic familiarity with CoreData and iOS development is assumed. This tutorial was done for an iPhone 6 and iOS 8.</p>
 
 <p>In Persistent-Pins we will drop pins on a mapView using the UILongPressGestureRecognizer. Dropped Pins will be immediately saved to a CoreData database. Pins can be deleted with taps. On restart, all placed Pins will have persisted on the map. My Github contains the finished project with comments, the steps can be found as commits.</p>
 
@@ -13,13 +127,16 @@
 
 <p>Let’s start by initializing the project. Create a new project in Xcode, starting from a single view application. Choose Swift as language and enable CoreData by ticking the “Use Core Data” box.</p>
 
+<p><img src="/assets/images/start-model.png" alt="Start model picture" /></p>
+
 <p>Your project is now ready. Checkout how CoreData is initialized in the AppDelegate.</p>
 
-<p>Let’s navigate to our model, “Persistent-Pins”. This is where we are going to define our entity. Let’s add one entity and name it “Pin”. Add two attributes to your new “Pin” entity. “latitude” and “longitude” are both going to be attributes and will be of type “Double”. We will store our Pin’s latitude and longitude in these properties.</p>
-
-<h4 id="step-two---setting-up-our-managed-object">Step two - Setting up our managed object</h4>
+<p>Let’s navigate to our model, “Persistent-Pins”. This is where we are going to define our entity. Let’s add one entity and name it “Pin”. Add two attributes to your new “Pin” entity. “latitude” and “longitude” are both going to be attributes and will be of type “Double”. We will store our Pin’s latitude and longitude in these properties. 
+####Step two - Setting up our managed object</p>
 
 <p>Next, we are going to set up our managed object or entity. Navigate to your model “Persistent Pins” and go on “Editor”. Select “create NSManaged Object subclass…”. Choose Persistent Pins, then Pin, then change the language to Swift and save the file to your project folder (select the right group - persistent pins - in the group dropdown).</p>
+
+<p><img src="/assets/images/pin-attribute.png" alt="pin attributes picture" /></p>
 
 <p>At the top of the file, create another import statement for MapKit. We will need CoreData to save our Pins to our model and we will need MapKit to make the Pins that we save a subclass of MKAnnotation - this will allow us to populate our map with Pins directly from CoreData.</p>
 
@@ -56,6 +173,8 @@
 
 <p><strong>Finally, navigate to your model and change the class in your Pin entity to “Pin”</strong></p>
 
+<p><img src="/assets/images/pin-class.png" alt="pin class picture" /></p>
+
 <p>Great, we are finished creating our custom object and are done with step one. This should be the finished code:</p>
 
 <div class="highlight"><pre><code class="language-swift" data-lang="swift"><span class="k">import</span> <span class="n">Foundation</span>
@@ -84,9 +203,11 @@
 
 	<span class="p">}</span></code></pre></div>
 
-<h4 id="step-two----setting-up-our-ui-and-our-viewcontroller">Step two – setting up our UI and our ViewController</h4>
+<h4 id="step-three----setting-up-our-ui-and-our-viewcontroller">Step three – setting up our UI and our ViewController</h4>
 
 <p>Navigate to storyboard and drag a MapKit View onto your viewcontroller. Set the constraints so the MapView fills out the entire controller. Also, do not forget to enable MapKit in your projects capabilities. Go to persistent Pins and enable “Maps” under capabilities.</p>
+
+<p><img src="/assets/images/turnon-mapkit.png" alt="mapkit picture" /></p>
 
 <p>Let’s create an outlet for our mapView in our ViewController file. ctrl + drag your mapView into your ViewController using the assistant editor and add an outlet named “mapView”. Do not forget to import MapKit into your ViewController and set your ViewController as MKMapViewDelegate.</p>
 
@@ -115,7 +236,7 @@
 
 <p>As you can see, the UILongPressGestureRecognizer us linked to a method called dropPin. We will implement that method next.</p>
 
-<h4 id="step-three---the-droppin-method">Step three - the dropPin method</h4>
+<h4 id="step-four---the-droppin-method">Step four - the dropPin method</h4>
 
 <p>Let’s define our dropPin method. We will have to do three things:</p>
 
@@ -165,7 +286,7 @@
 
 <p>We will instantiate the appDelegate so we can use its methods. Then we proceed to instantiate a pin as our Pin class. We will initialize it with the coordinates from our touchMapCoordinate and use the appDelegate context as our context. Then we add the pin to our map view and we save our context - we could do this at another point too but it seems smart to do it here. We just successfully added a Pin to our CoreData model!</p>
 
-<h4 id="step-four---fetching-our-pins-and-adding-them-to-our-map-when-starting-our-app">Step four - fetching our Pins and adding them to our map when starting our app</h4>
+<h4 id="step-five---fetching-our-pins-and-adding-them-to-our-map-when-starting-our-app">Step five - fetching our Pins and adding them to our map when starting our app</h4>
 
 <p>Alright, let’s make sure that the pins that we insert into CoreData also get fetched when we need them, i.e. when the mapView loads. Let’s first change some of the logic that we implemented before. Import CoreData to our ViewController. Let’s also declare two implicitly unwrapped variables in ViewController:</p>
 
@@ -198,7 +319,7 @@ Do not forget to adjust the dropPin method accordingly! Delete the declaration o
 
 <p>Great, now we are able to see the pins that we add. Let’s try it out.</p>
 
-<h4 id="step-five---deleting-pins">Step five - deleting pins</h4>
+<h4 id="step-six---deleting-pins">Step six - deleting pins</h4>
 
 <p>This step is remarkably easy. We will implement one of our delegate methods - didSelectAnnotation. The wonderful thing is that all mapView.annotations are saved as an array - an array of Pins! That means the selected annotation can always be casted as a Pin and deleted from the managed context. The method should look like this:</p>
 
@@ -274,3 +395,82 @@ Do not forget to adjust the dropPin method accordingly! Delete the declaration o
 
 <p>I hope you enjoyed this tutorial!</p>
 
+
+</div>
+
+<div class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/blog/coding/2015/06/23/building-my-first-app%202/">
+            Building my first iPhone apps
+            <small>23 Jun 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/blog/finance/2015/06/20/sources-of-money/">
+            Sources of money
+            <small>20 Jun 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/blog/finance/2015/06/19/fundraising-101/">
+            Fundraising 101
+            <small>19 Jun 2015</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+<div>
+  
+  <h2>Comment Section</h2>
+  <h4>Feel free to leave a comment below!</h4>
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+      /* * * CONFIGURATION VARIABLES * * */
+      var disqus_shortname = 'juliusdanek';
+      
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function() {
+          var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+   
+</div>
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+  </body>
+</html>
