@@ -54,6 +54,7 @@ These are some of the challenges that I see:
 * Product and solution development 
 * Financing (particularly venture financing which might not be interested in this kind of business but which can provide the kind of expertise and connections necessary to succeed in such an endeavor)
 * Identifying the right beach-head market within that specific segment
+* Regulation - this might actually be the biggest challenge within the space. Financial services are strictly regulated both by federal government as well internal regulations should you cooperate with a bank
 
 The challenges are daunting but the pay-offs could be tremendous as well. 
 
