@@ -4,13 +4,81 @@
  <title>Julius' Blog</title>
  <link href="http://juliusdanek.de/blog//blog/atom.xml" rel="self"/>
  <link href="http://juliusdanek.de/blog//blog/"/>
- <updated>2015-09-15T22:39:45-07:00</updated>
+ <updated>2015-09-15T22:43:38-07:00</updated>
  <id>http://juliusdanek.de/blog/</id>
  <author>
    <name>Julius Danek</name>
    <email>juliusdanek@gmail.com</email>
  </author>
 
+ 
+ <entry>
+   <title>Opportunities to provide financial services to low-income populations in developed countries through technology</title>
+   <link href="http://juliusdanek.de/blog//technology/2015/09/15/FinTech-under-banked-populations/"/>
+   <updated>2015-09-15T00:00:00-07:00</updated>
+   <id>http://juliusdanek.de/blog//blog/technology/2015/09/15/FinTech-under-banked-populations</id>
+   <content type="html">&lt;h2 id=&quot;the-economist-article&quot;&gt;The economist article&lt;/h2&gt;
+
+&lt;p&gt;In the September 7 version of the Economist, the magazine published a very interesting article about how low-income populations (which I will coin LIP for lack of a better word - “the poor” does not seem appropriate) in the United States (and probably other industrial nation, even though I yet have to research on it), have much worse access to financial services than higher-income populations do (you can find the article &lt;a href=&quot;http://www.economist.com/news/united-states/21663262-why-low-income-americans-often-have-pay-more-its-expensive-be-poor&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Why is this the case? It is mostly the prohibitive cost. One outrageous example is the $40 per payroll check charged by 26,000 businesses to cash a check from a typical unbanked households with full-time workers. Banks and other financial institutions rake in approximately $8bn in fees this way per year (&lt;a href=&quot;http://www.brookings.edu/~/media/research/files/reports/2008/1/banking%20fellowes/01_banking_fellowes.pdf&quot;&gt;Brookings Institute, 2008&lt;/a&gt;).
+Doesn’t this call for a technological revolution, a true “disruption”? The economist article cites a few more examples how LIPs are affected:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Overdraft fees - vary between $7 to $40 per transaction (I experienced a painful lesson in this recently, one that cost me $135 on a transactional value of $25 with Bank of America)&lt;/li&gt;
+  &lt;li&gt;Check-cashing fees - 2-5% of check value&lt;/li&gt;
+  &lt;li&gt;Cost of remittances to relatives abroad&lt;/li&gt;
+  &lt;li&gt;ATM withdrawal fees&lt;/li&gt;
+  &lt;li&gt;Pay-day lenders&lt;/li&gt;
+  &lt;li&gt;Covering the cost to pay for earned-income tax credits&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The article claims that these fees can accumulate up to $40,000 over the career of a full-time worker. Assuming that such a career averages 40 years and that the average cost is more like $20,000 over a lifetime, that still equates to approximately $500 per year. Seeing the poverty line is $23,834 for a family of four (&lt;a href=&quot;http://www.povertyusa.org/the-state-of-poverty/poverty-facts/&quot;&gt;Poverty USA&lt;/a&gt;) that is a huge cost. That is not to say that all of these full-time workers would fall under the poverty line, but even at a higher income of say $30,000 a year for an individual, $500 is a hefty amount.&lt;/p&gt;
+
+&lt;h2 id=&quot;the-under-banked---a-market-opportunity-with-great-potential&quot;&gt;The under-banked - a market opportunity with great potential?&lt;/h2&gt;
+
+&lt;p&gt;Seeing that around 45m US Americans live below the poverty there is a significant market for providing services for the “under-banked”. At a very modest assumption of $5 in financial services fees per month (any kind) , this equates to a market of roughly $3bn. Seeing that the fees from checking cashes only however rack up to $8bn the market is ultimately much bigger. Many companies in that space such as retail banks and check-cashers are also quite old (Western Union, Moneygram, RiteCheck) and seem ripe to see some innovation.&lt;/p&gt;
+
+&lt;p&gt;The US has brought about an abundance of financial technology innovation in the past few years alone. Traditional providers of financial services in spaces such as wealth management (Wealthfront, Betterment, Acorns), savings behavior (Mint, Digit.co), banking (Simple, Coin), payments (Dwolla, Stripe, Apple pay), transfers (Venmo, Square Cash) and consumer loans (Lending club, Affirm) have been thoroughly shook up.&lt;/p&gt;
+
+&lt;p&gt;However, almost all of these services are geared towards a technologically savvy population, usually in their 20-40s and college educated. They provide great user-experience but are usually available on smartphones and the Internet (with the exception of Digit.co which works through SMS services).&lt;/p&gt;
+
+&lt;p&gt;How can we utilize some of the technologies developed over the past years to provide some of the aforementioned services at a much lower cost? I see several areas that would be interesting to start in:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Text-based banking (not necessarily on a smartphone but more akin to the examples set in developing countries such as Kenya with m-Pesa)&lt;/li&gt;
+  &lt;li&gt;Prepaid debit cards&lt;/li&gt;
+  &lt;li&gt;Tools to incentive and enable savings (see digit.co)&lt;/li&gt;
+  &lt;li&gt;Earned-income tax credit (EITC) loan instruments - this is actually a very interesting space since payouts occur once a year and can be reasonably predicted. Providing loans to finance immediate needs that can then be offset with the single, once-a-year EITC could encourage savings and more reasonable spending behavior.&lt;/li&gt;
+  &lt;li&gt;mobile-based or neighborhood-based check-cashing services&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;All of these niche markets could lead to the development of an integrated financial services company that specifically chooses LIP as it’s target customers.&lt;/p&gt;
+
+&lt;h2 id=&quot;the-challenges&quot;&gt;The challenges&lt;/h2&gt;
+
+&lt;p&gt;The challenges in this space are abundant. As technologists, business and UX experts we would be dealing with a population that does not necessarily has been exposed to technology as much as we have. Even the technological solutions would look entirely different from the high-tech, computing-intensive approaches based on the newest gadgets currently in use. LIPs do not necessarily possess smartphones, so a text-based service might be most sensible here Someone looking to approach this problem would do well looking at examples from developing countries, such as aforementioned m-Pesa in Kenya.&lt;/p&gt;
+
+&lt;p&gt;Besides that, many challenges can arise from the unwillingness of investors to provide the necessary capital to get a company off the ground that would like to scale and develop it’s proprietary technological solution. LIPs are not necessary the target group of most startups today. Luckily, alternative financing models are emerging through impact investing and resources such as the &lt;a href=&quot;http://www.accion.org/venturelab&quot;&gt;Venture Lab&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;These are some of the challenges that I see:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Gaining consumer trust - LIPs have more often than not been exploited by companies rather than being served in a responsible manner&lt;/li&gt;
+  &lt;li&gt;Product adoption&lt;/li&gt;
+  &lt;li&gt;Product and solution development&lt;/li&gt;
+  &lt;li&gt;Financing (particularly venture financing which might not be interested in this kind of business but which can provide the kind of expertise and connections necessary to succeed in such an endeavor)&lt;/li&gt;
+  &lt;li&gt;Identifying the right beach-head market within that specific segment&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The challenges are daunting but the pay-offs could be tremendous as well.&lt;/p&gt;
+
+&lt;p&gt;It might be useful to recognize that there is a lot of space to innovate in under-served populations even in industrial countries, not only in the developing world (where we could learn a lot however in trying to solve our own problems). Also, as the authors of &lt;a href=&quot;http://www.amazon.com/Poor-Economics-Radical-Rethinking-Poverty/dp/1610390938&quot;&gt;Poor Economics&lt;/a&gt; point out, LIPs are more than willing to pay for useful services so they should not be neglected in looking to establish successful for-profit technology companies.&lt;/p&gt;
+
+&lt;p&gt;I would love to hear your opinion on this matter. Shoot me an &lt;a href=&quot;&amp;#109;&amp;#097;&amp;#105;&amp;#108;&amp;#116;&amp;#111;:&amp;#106;&amp;#117;&amp;#108;&amp;#105;&amp;#117;&amp;#115;&amp;#100;&amp;#097;&amp;#110;&amp;#101;&amp;#107;&amp;#064;&amp;#103;&amp;#109;&amp;#097;&amp;#105;&amp;#108;&amp;#046;&amp;#099;&amp;#111;&amp;#109;&quot;&gt;email&lt;/a&gt; or leave a comment, would be happy to hear what you think the challenges are, what other opportunities lie in that space or what companies are already active.&lt;/p&gt;
+
+</content>
+ </entry>
  
  <entry>
    <title>Swift Tutorial -  Persistent Annotations in MapKit with Core Data</title>

@@ -127,6 +127,72 @@
   
   <div class="post">
     <h1 class="post-title">
+      <a href="/blog//coding/2015/06/11/useful-swift-shorthand-notations/">
+        Useful Swift Shorthand Notations
+      </a>
+    </h1>
+
+    <span class="post-date">11 Jun 2015</span>
+
+    <p>While studying Swift I sometimes come across shorthand notation that can be extremely confusing at first. You don’t know the name of the particular shorthand and don’t know where to look it up at first but when you get the gist of it, it can be extremely useful. I will list a few here that I found to be interesting as I have not encountered them in other languages before.</p>
+
+<h2 id="terniary">Terniary</h2>
+
+<p>A great example is the <a href="https://developer.apple.com/library/ios/documentation/Swift/Conceptual/Swift_Programming_Language/BasicOperators.html">terniary</a>(look under “Terniary Conditional Operator”). A terniary can look something like this:</p>
+
+<div class="highlight"><pre><code class="language-swift" data-lang="swift"><span class="k">let</span> <span class="nl">b</span><span class="p">:</span> <span class="n">CGFloat</span> <span class="o">=</span> <span class="nb">self</span><span class="p">.</span><span class="n">blueControl</span><span class="p">.</span><span class="n">on</span> <span class="o">?</span> <span class="mi">1</span> <span class="o">:</span> <span class="mi">0</span></code></pre></div>
+
+<p>Pseudo-code:</p>
+
+<blockquote>
+  <p>If self.blueControl is on (self.blueControl is a on/off switch), assign b a CGFloat with the value of 1. If it isn’t, assign the value of 0.</p>
+</blockquote>
+
+<p>In code, this is shorthand notation for:</p>
+
+<div class="highlight"><pre><code class="language-swift" data-lang="swift"><span class="k">if</span> <span class="nb">self</span><span class="p">.</span><span class="n">blueControl</span><span class="p">.</span><span class="n">on</span> <span class="p">{</span>
+  <span class="k">let</span> <span class="nl">b</span><span class="p">:</span> <span class="n">CGFloat</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+  <span class="k">let</span> <span class="nl">b</span><span class="p">:</span> <span class="n">CGFloat</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="p">}</span></code></pre></div>
+
+<p>Here’s another example that illustrates the use of terniaries</p>
+
+<div class="highlight"><pre><code class="language-swift" data-lang="swift"><span class="k">if</span> <span class="mi">2</span> <span class="o">&gt;</span> <span class="mi">4</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="nl">a</span><span class="p">:</span> <span class="n">Int</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="nl">a</span><span class="p">:</span> <span class="n">Int</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="p">}</span>
+
+<span class="k">let</span> <span class="nl">a</span><span class="p">:</span> <span class="n">Int</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">&gt;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">?</span> <span class="mi">1</span> <span class="o">:</span> <span class="mi">0</span></code></pre></div>
+
+<h2 id="assigning-bools">Assigning bools</h2>
+
+<p>In another persons’ code I encountered this interesting notation:</p>
+
+<div class="highlight"><pre><code class="language-swift" data-lang="swift"><span class="n">youWon</span> <span class="o">=</span> <span class="n">opponentChoice</span> <span class="o">==</span> <span class="s">&quot;Paper&quot;</span></code></pre></div>
+
+<p>Pseudo-code:</p>
+
+<blockquote>
+  <p>If opponentChoice equals string “Paper”, assign youWon the boolean value of true.</p>
+</blockquote>
+
+<p>or:</p>
+
+<div class="highlight"><pre><code class="language-swift" data-lang="swift"><span class="k">if</span> <span class="n">opponentChoice</span> <span class="o">==</span> <span class="s">&quot;Paper&quot;</span> <span class="p">{</span>
+  <span class="n">youWon</span> <span class="o">=</span> <span class="nb">true</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+  <span class="n">youWon</span> <span class="o">=</span> <span class="nb">false</span>
+<span class="p">}</span></code></pre></div>
+
+<p>I will update this as I find new shorthand notations!</p>
+
+
+  </div>
+  
+  <div class="post">
+    <h1 class="post-title">
       <a href="/blog//general/2015/06/10/why-coding%3F-part2/">
         Why coding? - Part 2
       </a>
@@ -188,63 +254,6 @@ When I came to JavaScript and jQuery, it got more interesting.</p>
 <p>There are many many ways to solve this. The feeling you get when the desired answers finally prints to your screen and without error is incredible. This feeling of instant gratification is incredible and I have not encountered it elsewhere. Before computer programming, the only time I could ever concentrate continuously for several hours on thing was when solving math problems that were hard but had a solution somewhere on the horizon.</p>
 
 <p>I realize that my teaching myself I will hardly ever challenge a computer science major in their own field, but teaching myself the practical skills while simultaneously diving into what constitutes the underlying structure the digital and tech world is something that I yearn to do. Learning how to code seems like the perfect way to do it and I am enjoying it tremendously - just as the MIT motto says: ‘mens et manus’.</p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/blog//general/2015/06/10/why-coding%3F-part1/">
-        Why coding? - Part 1
-      </a>
-    </h1>
-
-    <span class="post-date">10 Jun 2015</span>
-
-    <h2 id="why-coding">Why coding?</h2>
-
-<!-- Add part1 and part 2 hyperlinks so they are connected -->
-<p>I decided to split this post into two parts. Part 1 explaining what led up to me starting to code and part 2 explaining why I enjoy coding.</p>
-
-<p class="message">
-	Julius, why have you started coding, what are you hoping to accomplish?
-</p>
-
-<p>I have been asked this question many times over the past months. My interest in technology and computers reaches far back. In my childhood and teenage years however it was rather geared or “misdirected” towards computer games (even though I do not regret a single moment playing all those awesome games).</p>
-
-<h1 id="economics-and-identity-crisis">Economics and identity crisis</h1>
-
-<p>After graduating high school and an identity crisis with no real idea what my real interests where I decided to study economics - it seemed like a reasonable choice at the time, offering job security and heck, everybody was doing it! It promised to apply mathematics to solve real world problems and that really intrigued me.</p>
-
-<p>I did enjoy studying economics, I do believe it is one of the most profound and influential academic fields (whether it is a science is at least debatable: <a href="http://www.nytimes.com/2013/10/21/opinion/yes-economics-is-a-science.html">yes</a>, <a href="http://www.thecrimson.com/article/2013/12/13/economics-science-wang/">no</a>, <a href="http://www.project-syndicate.org/commentary/robert-j--shilleron-whether-he-is-a-scientist">maybe</a>). The mathematical problems were challenging and some of the models very interesting. However, besides on paper I did not feel like I was actually accomplishing much.</p>
-
-<p>Computer science was not on my radar at all. My cousin <a href="https://de.linkedin.com/in/fabianruffy">Fabian</a> was a computer science major at LMU München and when I observed him studying all the Boolean logic and assembly language I was happy that I was doing the ‘easier’ economics math work.</p>
-
-<h1 id="back-to-tech">Back to tech</h1>
-
-<p>In 2011 then, with an internship in VC in New York I started getting exposure to finance and its role in facilitating technological progress. Being exposed to many ideas and entrepreneurs made me curious about the realm of tech and startups and I started reading up on ideas, blogs, newspaper articles, etc. When I came to MIT originally a year ago for my Master’s degree, I was planning on either</p>
-
-<ul>
-  <li>launching my own company or</li>
-  <li>working at a VC firm</li>
-</ul>
-
-<p>The environment at MIT however drove me to try out something else completely, coding. I had built a website before, the previous version of <a href="http://entrefem.de">www.entrefem.de</a> with the help of a friend, a template and lots of patchwork (my friend told me I totally messed up the code more than once). This time however I wanted to get down to the nit and grit. I felt that being at MIT I did not want to be reduced only to me being a ‘Sloanie’. I wanted to be on the tech side as well, even if it was just basics and talking the lingo.</p>
-
-<p>I began my journey with a popular starting point:</p>
-
-<p><a href="www.cadecademy.org">Codecademy</a></p>
-
-<p>Codecademy was a great starting point as it was</p>
-
-<ol>
-  <li>Free</li>
-  <li>Designed for beginners</li>
-  <li>Motivational</li>
-</ol>
-
-<p>And so I began taking coding classes online and at MIT, steadily being sucked into the world of computer science.</p>
-
-<p>Read more in part 2!</p>
 
   </div>
   
