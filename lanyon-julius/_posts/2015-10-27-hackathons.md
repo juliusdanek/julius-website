@@ -109,7 +109,7 @@ When we started the hackathon, we were confident it would be easy to pull this o
 
 What helped us finish however was our ability to prioritize and finish the features that we felt were needed. In the end, we delivered a technically very impressive product that was still rough on a lot of edges however.
 
-Checkout [https://github.com/msniff16/flashcash][https://github.com/msniff16/flashcash] for a fully functional demo and for all the features of our completed app. 
+Checkout [https://github.com/msniff16/flashcash][14] for a fully functional demo and for all the features of our completed app. 
 
 ### Outcome
 
@@ -117,7 +117,7 @@ What disappointed our team however that even though we delivered an impressive t
 
 Next time we'll adjust for that!
 
-##### Thanks for reading this post, feel free to email at any time if you have questions or want to go to a hackathon :-)
+##### Thanks for reading this post, feel free to [email][15] at any time if you have questions or want to go to a hackathon :-)
 
 
 <!-- Links -->
@@ -135,3 +135,5 @@ Next time we'll adjust for that!
 [11]: https://developers.braintreepayments.com/start/overview
 [12]: https://www.firebase.com/
 [13]: http://braintreepayments.com/
+[14]: https://github.com/msniff16/flashcash
+[15]: mailto:juliusdanek@gmail.com
