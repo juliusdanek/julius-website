@@ -1,0 +1,137 @@
+---
+layout: post
+title: My failures at hackathons: lessons about software development, team work and leadership
+published: true
+category: coding
+tags: coding hackathon 
+comments: true
+---
+
+<!-- Content -->
+
+## My lessons from hackathons
+
+Last weekend I attended my 3rd hackathon ([Money 20/20][1]) and submitted an actual project for the first time, one that I conceived and led the development of. Attending hackathons taught me a lot about how to think about development, how to lead technical projects and furthered my own technical skills. I wanted to relay some of my hackathon experiences and how it helped me grow personally and professionally in this post.
+
+There is a detailed account of my experiences below but I want to relate the main take-aways here. The utter failure of our TechCrunch project especially (read below) was very humbling and led to great learnings on my side. 
+
+### Take-aways:
+
+1. Select the right team. You need the right team to compete at a hackathon. More important than having all the technical skills on board is to make sure that the team members are equally motivated and ready to put in work
+2. Read through the hackathon aims, the judging criteria and form your idea accordingly
+3. Prepare diligently and inform yourself about available APIs and decide well in advance which ones suit your idea best
+4. Read through API documentations and actually test how they work - you might end up with a lot of unnecessary work if you do not
+5. Do not be afraid to take on leadership roles, even if your coding skills might not be the best. It is more important to have someone leading the team than everyone being the perfect coder
+6. Define processes. Make sure that everyone in the team knows what they are doing and who they are working with. Have people own their processes
+7. Take pride in your work and make sure to present it well. Use a video to demo it, don't be afraid to hard-code some values in case it doesn't turn out the right way, simply make sure you convey the main features and how it is supposed to work if it was perfect. 
+
+Most importantly however: Every hackathon attendance, regardless of the outcome, is an amazing opportunity to learn, get to know great people and grow. 
+
+
+### What is a hackathon - a quick primer
+
+As [Wikipedia][2] suggests, "a hackathon (also known as a hack day, hackfest or codefest) is an event in which computer programmers and others involved in software development and hardware development, including graphic designers, interface designers and project managers, collaborate intensively on software projects in competition with other teams."
+
+You can imagine it as giant halls stuffed with teams of programmers from all over the place, working on different software ideas for several hours. All the while you usually get served unhealthy food, lots of snacks and energy drinks so you can survive the night and concentrate on the work. Usually next to the competitors, you are surrounded by swarms of software companies vying for you to use their software and hoping to attract dev talent with ridiculous amounts of "company swag". This company swag usually always includes a ton of t-shirts, the obligatory sunglasses, stickers and many other more or less useless things. 
+
+The whole idea of hackathons has enjoyed tremendous growth over the past years, with events mushrooming all over the world in all kinds of different categories:
+
+* [Music][5]
+* [Internal Company Hackathons][4]
+* [Arts][3]
+* Student Hackathons: [MIT][6], [Berkeley][7], etc.
+* & many more targeting specific demographics, different problems, different platforms, etc.
+
+
+### Hackathon #1: I have no idea what I am doing
+
+The first time I attended a hackathon I could barely code a website in HTML & CSS and had just learned what a hackathon was. Good thing I studied at MIT, where a hacking spirit and sense of "just trying things out" permeated the entire university culture. During [HackMIT][6] I agreed to host several hackers from different universities at my place and was thus allowed to attend. 
+
+I spent my first hackathon shadowing a group of friendly CS undergrads from Northeastern University that were working on an application that involved turning a [person's Twitter stream into a musical melody][8]. Next to hovering around the guys from Northeastern, I took time to explore other projects that people were working on and getting a feel for the culture surrounding hackathons. You can find every prototype of tech person there: the brogrammers, the high school geniuses, the robotics dudes, the older hardcore machine learning and AI folks, the shy Asian PhD students, the extroverted front end devs, the quirky designers, and the idea guys. 
+
+It was great to see how these teams worked together but I had absolutely no clue how it all worked. I just started by asking very simple, pointed questions and gathering advice on how to teach myself. 
+
+Basically, every team member takes responsibility over one part of the software app they are coding. Someone will output designs, someone will do front-end (what the user sees), someone will do back-end (everything the user doesn't have to see), someone will do server side (what the user will never ever see except if his Internet connection fails) and so on. Each of the team members will rely on input from the others. You can code your part mostly autonomously by simulating the input but in order for the application to really work, the other need to do their job and provide you the inputs in the format you need. More about that later. 
+
+I worked on some own projects on the side - making a blue webpage that featured my a picture of my friends face in the middle. Yes, my coding skills were negligible at that point but I started gaining an understanding of how dev processes actually work.
+
+### Hackathon #2: I can code now but I failed in leading our team
+
+My second hackathon, the [TechCrunch Disrupt Hackathon][9], came almost a year after the first one. I had finished my degree, taken several courses in computer science, worked on several little projects in Python and Swift (the iOS language) and was fully capable of developing mobile applications of intermediate difficulty. 
+
+We had put together a small team of 4, consisting of a full-stack engineer (someone that can do most things software related), an iOS developer (me), a front-end dev and a designer. Our idea was to allow people to donate to natural disasters through an app and display where the donations came from on a map. The idea itself was quite neat but our execution was a disaster. We worked together terribly as a team. I attribute it to three factors:
+
+* Lack of preparation
+* No leadership in the project and failure on my side to take on that role
+* Bad team communication
+
+##### Lack of preparation:
+
+Not preparing for the Hackathon at all was probably the biggest mistake. We could not decide on what software tools (APIs) to use and did not examine their documentation and implementation beforehand. At the hackathon, we kept on switching from one to the other. I spent about two hours trying to understand one API documentation just to realize that it wouldn't work for what we were trying to do. 
+
+At 4am we realized that the API we used for natural disasters didn't even display natural disaster but just major storms. We switched APIs that early in the morning, thus completely changing the dynamics of our app and breaking several major parts in the process - ultimately leading to use leaving the hackathon.
+
+##### No leadership in the project
+
+No one in our team took a leadership role and clearly outlined what everyone had to do. This resulted in everyone working on what they thought they should do while completely disconnected from all the others in the team. 
+
+In hindsight, I should have taken on that role, taking the team through the following steps:
+
+1. Own the preparation process by breaking down the idea into different parts that can be assigned to every team member
+2. Exploring what APIs were conducive to our idea, reading their documentations and deciding beforehand
+3. Making the full-stack completely own the backend process and having him outline the data structure
+4. Setting up the touch points between team members and defining the responsibilities and tasks during the hackathon once steps 1-3 were complete
+5. Having regular progress check-ins during the hackathon and setting up documents that allowed people to track their progress
+
+##### Bad team communication
+
+Our team simply did not work together that well. Everyone was working on their own parts without precisely communicating what it was they needed, what they were working on and how it fit into the puzzle. Further, some team misfits surfaced that we could have potentially identified beforehand but that we ignored until it blew up into our face. Additionally, a lack of process made it a lot harder to sync our efforts and really bring them to fruition. 
+
+### Hackathon #3: Good team, good coordination, good idea and a result to be proud of
+
+My 3rd hackathon came this weekend in Las Vegas, the [Money 20/20 hackathon][1]. Again, we had a good idea for a fun project: Instant delivery of cash whenever and wherever you needed it. Our delivery would be an iOS app that would allow us to demo our features in real-time. Our team was amazing, we had a designer (Armando), one full-stack (Mujtaba), one full-stack mobile dev (Matt) and an iOS dev (me). 
+
+I started coordinating the team about 2 weeks before. When the idea was set, I owned the entire preparation process and did so in several steps.
+
+1. Sitting down with the team and outlining what our app would look like exactly. We used a combination of drawing the different screens and steps on paper and having Armando draw up mocks in Sketch. This way Matt and I would know exactly what to code and Armando would know where his designs for buttons, splashscreens, logos, etc. were needed. 
+
+2. In coordination with Matt, I decided on using one [API for iOS backend][12] that would allow us to store our data and observe changes in real time and one [API for payment processing][13] that would allow us to disperse funds across different people from one central marketplace. 
+
+3. Since the payment processing would have to implemented by Mujtaba by setting up an entire web server in Ruby (see [here][11]), I read through the entire documentation, provided him with a list of calls that we needed and the type of responses we expected (see Google Doc [here][10]). 
+
+4. Matt and I started fooling around with fake response objects and trying out the backend APIs before the hackathon. This was really important, else we would have spent several hours there just learning how the APIs really worked. API documentation is usually not sufficient for you to start using it right away, you need to really get in there and understand it by playing around with it.
+
+5. Dividing up the work on the iOS app between Matt (Firebase) and me (Braintree) and letting Armando know about what buttons we needed where. 
+
+#### All the preparation doesn't stop chaos from ensuing
+
+When we started the hackathon, we were confident it would be easy to pull this off after all the prep we did. Of course, it turned out it didn't. We finished the main features of our app just in time, without a lot of the features we had originally planned. Why? It turns out implementation is never as straightforward as planned. One bug in our Firebase communication took Matt and I about 3 hours to solve. iOS development was further complicated with the use of storyboards and the resulting merge conflicts (every iOS dev that has ever worked in a team can probably relate).
+
+What helped us finish however was our ability to prioritize and finish the features that we felt were needed. In the end, we delivered a technically very impressive product that was still rough on a lot of edges however.
+
+Checkout [https://github.com/msniff16/flashcash][https://github.com/msniff16/flashcash] for a fully functional demo and for all the features of our completed app. 
+
+#### Outcome
+
+What disappointed our team however that even though we delivered an impressive technical product and did a lot of hard work, we still did not win or even make it to the finals. We definitely should have spent some more time refining the value proposition of our app and working on the 2 (!!!!) minute presentation we were allowed to give. 
+
+Next time we'll adjust for that!
+
+### Thanks for reading this post, feel free to [email][mailto:juliusdanek@gmail.com] at any time if you have questions or want to go to a hackathon :-)
+
+
+<!-- Links -->
+
+[1]: http://www.money2020.com/2015-money2020-hackathon
+[2]: https://en.wikipedia.org/wiki/Hackathon
+[3]: www.hackingarts.com/
+[4]: https://www.facebook.com/notes/facebook-engineering/stay-focused-and-keep-hacking/10150842676418920
+[5]: http://new.musichackday.org/
+[6]: http://hackmit.org/
+[7]: http://www.calhacks.io/
+[8]: https://github.com/dcalacci/life-as-music
+[9]: http://disruptsf2015.devpost.com/
+[10]: https://docs.google.com/document/d/12IqrL0EQUfG35STH3u-vrb6S7hf7IgDVwtM7QjOoT3Q/edit?usp=sharing
+[11]: https://developers.braintreepayments.com/start/overview
+[12]: https://www.firebase.com/
+[13]: http://braintreepayments.com/

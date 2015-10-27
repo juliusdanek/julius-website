@@ -99,6 +99,10 @@
         
       
     
+      
+        
+      
+    
     <a class="sidebar-nav-item" href="http://juliusdanek.de" target="_blank">Website</a>
   </nav>
 
@@ -124,6 +128,298 @@
 
       <div class="container content">
         <div class="posts">
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/blog//coding/2015/07/14/persistent-pins-tutorial/">
+        Swift Tutorial -  Persistent Annotations in MapKit with Core Data
+      </a>
+    </h1>
+
+    <span class="post-date">14 Jul 2015</span>
+
+    <h2 id="persistent-annotations-in-mapkit">Persistent Annotations in MapKit</h2>
+
+<p>Hi everyone, in this tutorial we will use CoreData to persist pin annotations on a map using Apple’s MapKit in six simple steps. Basic familiarity with CoreData and iOS development is assumed. This tutorial was done for an iPhone 6 and iOS 8.</p>
+
+<p>In Persistent-Pins we will drop pins on a mapView using the UILongPressGestureRecognizer. Dropped Pins will be immediately saved to a CoreData database. Pins can be deleted with taps. On restart, all placed Pins will have persisted on the map. My Github contains the finished project with comments, the steps can be found as commits.</p>
+
+<p>Github link to finished project: <a href="https://github.com/juliusdanek/Persistent-Pins-Tutorial">https://github.com/juliusdanek/Persistent-Pins-Tutorial</a></p>
+
+<h3 id="step-one---setting-up-our-model-and-coredata">Step one - Setting up our model and CoreData</h3>
+
+<p>Let’s start by initializing the project. Create a new project in Xcode, starting from a single view application. Choose Swift as language and enable CoreData by ticking the “Use Core Data” box.</p>
+
+<p><img src="/blog/assets/images/start-model.png" alt="Start model picture" /></p>
+
+<p>Your project is now ready. Checkout how CoreData is initialized in the AppDelegate.</p>
+
+<p>Let’s navigate to our model, “Persistent-Pins”. This is where we are going to define our entity. Let’s add one entity and name it “Pin”. Add two attributes to your new “Pin” entity. “latitude” and “longitude” are both going to be attributes and will be of type “Double”. We will store our Pin’s latitude and longitude in these properties. 
+###Step two - Setting up our managed object</p>
+
+<p>Next, we are going to set up our managed object or entity. Navigate to your model “Persistent Pins” and go on “Editor”. Select “create NSManaged Object subclass…”. Choose Persistent Pins, then Pin, then change the language to Swift and save the file to your project folder (select the right group - persistent pins - in the group dropdown).</p>
+
+<p><img src="/blog/assets/images/pin-attribute.png" alt="pin attributes picture" /></p>
+
+<p>At the top of the file, create another import statement for MapKit. We will need CoreData to save our Pins to our model and we will need MapKit to make the Pins that we save a subclass of MKAnnotation - this will allow us to populate our map with Pins directly from CoreData.</p>
+
+<p>Place an @objc(Pin) under your import statements to ensure compatibility with objective-c - see <a href="http://stackoverflow.com/questions/24015185/generating-swift-models-from-core-data-entities">http://stackoverflow.com/questions/24015185/generating-swift-models-from-core-data-entities</a> for more details.</p>
+
+<p>You can see that “Pin” is already a subclass of NSManagedObject. Let’s make it a subclass of MKAnnotation as well. We will now receive an error message that our Pin does not conform to the MKAnnotation protocol. Let’s change that.</p>
+
+<p>At the bottom of the class declaration, add the variable “coordinate” of class CLLocationCoordinate2D like so:</p>
+
+<div class="highlight"><pre><code class="language-swift" data-lang="swift"><span class="k">var</span> <span class="nl">coordinate</span><span class="p">:</span> <span class="n">CLLocationCoordinate2D</span> <span class="p">{</span>
+	        <span class="k">return</span> <span class="n">CLLocationCoordinate2D</span><span class="p">(</span><span class="nl">latitude</span><span class="p">:</span> <span class="n">latitude</span> <span class="kt">as</span> <span class="n">Double</span><span class="p">,</span> <span class="nl">longitude</span><span class="p">:</span> <span class="n">longitude</span> <span class="kt">as</span> <span class="n">Double</span><span class="p">)</span>
+	    <span class="p">}</span></code></pre></div>
+
+<p>By now you will have noticed that latitude and longitude are declared as NSNumber. The problem is that CoreData will not recognize the Swift type <strong>Double</strong>. You will simply have to convert between Doubles and NSNumbers.</p>
+
+<p>Let’s provide our custom init method in the next step. Add this code below where you define your @NSManaged vars.</p>
+
+<div class="highlight"><pre><code class="language-swift" data-lang="swift"><span class="kr">override</span> <span class="nf">init</span><span class="p">(</span><span class="nl">entity</span><span class="p">:</span> <span class="bp">NSEntityDescription</span><span class="p">,</span> <span class="n">insertIntoManagedObjectContext</span> <span class="nl">context</span><span class="p">:</span> <span class="bp">NSManagedObjectContext</span><span class="o">?</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nb">super</span><span class="p">.</span><span class="k">init</span><span class="p">(</span><span class="nl">entity</span><span class="p">:</span> <span class="n">entity</span><span class="p">,</span> <span class="nl">insertIntoManagedObjectContext</span><span class="p">:</span> <span class="n">context</span><span class="p">)</span>
+    <span class="p">}</span>
+    
+    <span class="k">init</span><span class="p">(</span><span class="nl">annotationLatitude</span><span class="p">:</span> <span class="n">Double</span><span class="p">,</span> <span class="nl">annotationLongitude</span><span class="p">:</span> <span class="n">Double</span><span class="p">,</span> <span class="nl">context</span><span class="p">:</span> <span class="bp">NSManagedObjectContext</span><span class="p">)</span> <span class="p">{</span>
+        
+        <span class="k">let</span> <span class="n">entity</span> <span class="o">=</span> <span class="bp">NSEntityDescription</span><span class="p">.</span><span class="n">entityForName</span><span class="p">(</span><span class="s">&quot;Pin&quot;</span><span class="p">,</span> <span class="nl">inManagedObjectContext</span><span class="p">:</span> <span class="n">context</span><span class="p">)</span><span class="o">!</span>
+        
+        <span class="nb">super</span><span class="p">.</span><span class="k">init</span><span class="p">(</span><span class="nl">entity</span><span class="p">:</span> <span class="n">entity</span><span class="p">,</span> <span class="nl">insertIntoManagedObjectContext</span><span class="p">:</span> <span class="n">context</span><span class="p">)</span>
+        
+        <span class="n">latitude</span> <span class="o">=</span> <span class="bp">NSNumber</span><span class="p">(</span><span class="kt">double</span><span class="o">:</span> <span class="n">annotationLatitude</span><span class="p">)</span>
+        
+        <span class="n">longitude</span> <span class="o">=</span> <span class="bp">NSNumber</span><span class="p">(</span><span class="kt">double</span><span class="o">:</span> <span class="n">annotationLongitude</span><span class="p">)</span>
+    <span class="p">}</span></code></pre></div>
+
+<p>Our custom init method allows us to find our entity and initialize a Pin CoreData entry with our custom latitude and longitude values. This initializer will also automatically generate your coordinate.</p>
+
+<p><strong>Finally, navigate to your model and change the class in your Pin entity to “Pin”</strong></p>
+
+<p><img src="/blog/assets/images/pin-class.png" alt="pin class picture" /></p>
+
+<p>Great, we are finished creating our custom object and are done with step one. This should be the finished code:</p>
+
+<div class="highlight"><pre><code class="language-swift" data-lang="swift"><span class="k">import</span> <span class="n">Foundation</span>
+	<span class="k">import</span> <span class="n">CoreData</span>
+	<span class="k">import</span> <span class="n">MapKit</span>
+
+	<span class="k">class</span> <span class="nl">Pin</span><span class="p">:</span> <span class="bp">NSManagedObject</span><span class="p">,</span> <span class="bp">MKAnnotation</span> <span class="p">{</span>
+
+	    <span class="p">@</span><span class="n">NSManaged</span> <span class="k">var</span> <span class="nl">latitude</span><span class="p">:</span> <span class="bp">NSNumber</span>
+	    <span class="p">@</span><span class="n">NSManaged</span> <span class="k">var</span> <span class="nl">longitude</span><span class="p">:</span> <span class="bp">NSNumber</span>
+	    
+	    <span class="kr">override</span> <span class="k">init</span><span class="p">(</span><span class="nl">entity</span><span class="p">:</span> <span class="bp">NSEntityDescription</span><span class="p">,</span> <span class="n">insertIntoManagedObjectContext</span> <span class="nl">context</span><span class="p">:</span> <span class="bp">NSManagedObjectContext</span><span class="o">?</span><span class="p">)</span> <span class="p">{</span>
+	        <span class="nb">super</span><span class="p">.</span><span class="k">init</span><span class="p">(</span><span class="nl">entity</span><span class="p">:</span> <span class="n">entity</span><span class="p">,</span> <span class="nl">insertIntoManagedObjectContext</span><span class="p">:</span> <span class="n">context</span><span class="p">)</span>
+	    <span class="p">}</span>
+	    
+	    <span class="k">init</span><span class="p">(</span><span class="nl">annotationLatitude</span><span class="p">:</span> <span class="n">Double</span><span class="p">,</span> <span class="nl">annotationLongitude</span><span class="p">:</span> <span class="n">Double</span><span class="p">,</span> <span class="nl">context</span><span class="p">:</span> <span class="bp">NSManagedObjectContext</span><span class="p">)</span> <span class="p">{</span>
+	        <span class="k">let</span> <span class="n">entity</span> <span class="o">=</span> <span class="bp">NSEntityDescription</span><span class="p">.</span><span class="n">entityForName</span><span class="p">(</span><span class="s">&quot;Pin&quot;</span><span class="p">,</span> <span class="nl">inManagedObjectContext</span><span class="p">:</span> <span class="n">context</span><span class="p">)</span><span class="o">!</span>
+	        <span class="nb">super</span><span class="p">.</span><span class="k">init</span><span class="p">(</span><span class="nl">entity</span><span class="p">:</span> <span class="n">entity</span><span class="p">,</span> <span class="nl">insertIntoManagedObjectContext</span><span class="p">:</span> <span class="n">context</span><span class="p">)</span>
+	        <span class="n">latitude</span> <span class="o">=</span> <span class="bp">NSNumber</span><span class="p">(</span><span class="kt">double</span><span class="o">:</span> <span class="n">annotationLatitude</span><span class="p">)</span>
+	        <span class="n">longitude</span> <span class="o">=</span> <span class="bp">NSNumber</span><span class="p">(</span><span class="kt">double</span><span class="o">:</span> <span class="n">annotationLongitude</span><span class="p">)</span>
+	    <span class="p">}</span>
+	    
+	    <span class="k">var</span> <span class="nl">coordinate</span><span class="p">:</span> <span class="n">CLLocationCoordinate2D</span> <span class="p">{</span>
+	        <span class="k">return</span> <span class="n">CLLocationCoordinate2D</span><span class="p">(</span><span class="nl">latitude</span><span class="p">:</span> <span class="n">latitude</span> <span class="kt">as</span> <span class="n">Double</span><span class="p">,</span> <span class="nl">longitude</span><span class="p">:</span> <span class="n">longitude</span> <span class="kt">as</span> <span class="n">Double</span><span class="p">)</span>
+	    <span class="p">}</span>
+
+	<span class="p">}</span></code></pre></div>
+
+<h3 id="step-three----setting-up-our-ui-and-our-viewcontroller">Step three – setting up our UI and our ViewController</h3>
+
+<p>Navigate to storyboard and drag a MapKit View onto your viewcontroller. Set the constraints so the MapView fills out the entire controller. Also, do not forget to enable MapKit in your projects capabilities. Go to persistent Pins and enable “Maps” under capabilities.</p>
+
+<p><img src="/blog/assets/images/turnon-mapkit.png" alt="mapkit picture" /></p>
+
+<p>Let’s create an outlet for our mapView in our ViewController file. ctrl + drag your mapView into your ViewController using the assistant editor and add an outlet named “mapView”. Do not forget to import MapKit into your ViewController and set your ViewController as MKMapViewDelegate.</p>
+
+<p>In our viewDidLoad method, let’s add a long pressure gesture recognizer that will allow us to drop pins.</p>
+
+<p>Your ViewController should look like this now:</p>
+
+<div class="highlight"><pre><code class="language-swift" data-lang="swift"><span class="k">import</span> <span class="n">UIKit</span>
+	<span class="k">import</span> <span class="n">MapKit</span>
+
+	<span class="k">class</span> <span class="nl">ViewController</span><span class="p">:</span> <span class="bp">UIViewController</span><span class="p">,</span> <span class="bp">MKMapViewDelegate</span> <span class="p">{</span>
+
+	    <span class="p">@</span><span class="kt">IBOutlet</span> <span class="k">weak</span> <span class="k">var</span> <span class="nl">mapView</span><span class="p">:</span> <span class="bp">MKMapView</span><span class="o">!</span>
+	    
+	    <span class="kr">override</span> <span class="k">func</span> <span class="n">viewDidLoad</span><span class="p">()</span> <span class="p">{</span>
+	        <span class="nb">super</span><span class="p">.</span><span class="n">viewDidLoad</span><span class="p">()</span>
+	        
+	        <span class="k">var</span> <span class="n">longPress</span> <span class="o">=</span> <span class="bp">UILongPressGestureRecognizer</span><span class="p">(</span><span class="nl">target</span><span class="p">:</span> <span class="nb">self</span><span class="p">,</span> <span class="nl">action</span><span class="p">:</span> <span class="s">&quot;dropPin:&quot;</span><span class="p">)</span>
+	        <span class="n">longPress</span><span class="p">.</span><span class="n">minimumPressDuration</span> <span class="o">=</span> <span class="mf">0.5</span>
+	        <span class="n">mapView</span><span class="p">.</span><span class="n">addGestureRecognizer</span><span class="p">(</span><span class="n">longPress</span><span class="p">)</span>
+	        
+	        <span class="n">mapView</span><span class="p">.</span><span class="n">delegate</span> <span class="o">=</span> <span class="nb">self</span>
+	        
+	    <span class="p">}</span>
+	<span class="p">}</span></code></pre></div>
+
+<p>As you can see, the UILongPressGestureRecognizer us linked to a method called dropPin. We will implement that method next.</p>
+
+<h3 id="step-four---the-droppin-method">Step four - the dropPin method</h3>
+
+<p>Let’s define our dropPin method. We will have to do three things:</p>
+
+<ol>
+  <li>Extract the coordinates from the point where the user touched</li>
+  <li>Add an annotation when the UIGestureRecognizerState fires</li>
+  <li>Save that annotation to CoreData</li>
+</ol>
+
+<p>Let’s start by defining the function and extracting location data:</p>
+
+<div class="highlight"><pre><code class="language-swift" data-lang="swift"><span class="k">func</span> <span class="nf">dropPin</span><span class="p">(</span><span class="nl">gestureRecognizer</span><span class="p">:</span> <span class="bp">UIGestureRecognizer</span><span class="p">)</span> <span class="p">{</span>
+	        
+	        <span class="k">let</span> <span class="nl">tapPoint</span><span class="p">:</span> <span class="bp">CGPoint</span> <span class="o">=</span> <span class="n">gestureRecognizer</span><span class="p">.</span><span class="n">locationInView</span><span class="p">(</span><span class="n">mapView</span><span class="p">)</span>
+	        <span class="k">let</span> <span class="nl">touchMapCoordinate</span><span class="p">:</span> <span class="n">CLLocationCoordinate2D</span> <span class="o">=</span> <span class="n">mapView</span><span class="p">.</span><span class="n">convertPoint</span><span class="p">(</span><span class="n">tapPoint</span><span class="p">,</span> <span class="nl">toCoordinateFromView</span><span class="p">:</span> <span class="n">mapView</span><span class="p">)</span>
+	    <span class="p">}</span></code></pre></div>
+
+<p>Now, this method does not really do much yet. Let’s add a pin!</p>
+
+<div class="highlight"><pre><code class="language-swift" data-lang="swift"><span class="k">func</span> <span class="nf">dropPin</span><span class="p">(</span><span class="nl">gestureRecognizer</span><span class="p">:</span> <span class="bp">UIGestureRecognizer</span><span class="p">)</span> <span class="p">{</span>
+        
+        <span class="k">let</span> <span class="nl">tapPoint</span><span class="p">:</span> <span class="bp">CGPoint</span> <span class="o">=</span> <span class="n">gestureRecognizer</span><span class="p">.</span><span class="n">locationInView</span><span class="p">(</span><span class="n">mapView</span><span class="p">)</span>
+        <span class="k">let</span> <span class="nl">touchMapCoordinate</span><span class="p">:</span> <span class="n">CLLocationCoordinate2D</span> <span class="o">=</span> <span class="n">mapView</span><span class="p">.</span><span class="n">convertPoint</span><span class="p">(</span><span class="n">tapPoint</span><span class="p">,</span> <span class="nl">toCoordinateFromView</span><span class="p">:</span> <span class="n">mapView</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">UIGestureRecognizerState</span><span class="p">.</span><span class="n">Began</span> <span class="o">==</span> <span class="n">gestureRecognizer</span><span class="p">.</span><span class="n">state</span> <span class="p">{</span>
+            <span class="k">let</span> <span class="n">pin</span> <span class="o">=</span> <span class="bp">MKPointAnnotation</span><span class="p">()</span>
+            <span class="n">pin</span><span class="p">.</span><span class="n">coordinate</span> <span class="o">=</span> <span class="n">touchMapCoordinate</span>
+            <span class="n">mapView</span><span class="p">.</span><span class="n">addAnnotation</span><span class="p">(</span><span class="n">pin</span><span class="p">)</span>           
+        <span class="p">}</span>
+    <span class="p">}</span></code></pre></div>
+
+<p>Now we can see pins dropping where we touched. This implementation is fairly straightforward. Our pins are not persistent yet though! Let’s change our dropPin function with this code:</p>
+
+<div class="highlight"><pre><code class="language-swift" data-lang="swift"><span class="k">func</span> <span class="nf">dropPin</span><span class="p">(</span><span class="nl">gestureRecognizer</span><span class="p">:</span> <span class="bp">UIGestureRecognizer</span><span class="p">)</span> <span class="p">{</span>
+        
+        <span class="k">let</span> <span class="nl">tapPoint</span><span class="p">:</span> <span class="bp">CGPoint</span> <span class="o">=</span> <span class="n">gestureRecognizer</span><span class="p">.</span><span class="n">locationInView</span><span class="p">(</span><span class="n">mapView</span><span class="p">)</span>
+        <span class="k">let</span> <span class="nl">touchMapCoordinate</span><span class="p">:</span> <span class="n">CLLocationCoordinate2D</span> <span class="o">=</span> <span class="n">mapView</span><span class="p">.</span><span class="n">convertPoint</span><span class="p">(</span><span class="n">tapPoint</span><span class="p">,</span> <span class="nl">toCoordinateFromView</span><span class="p">:</span> <span class="n">mapView</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">UIGestureRecognizerState</span><span class="p">.</span><span class="n">Began</span> <span class="o">==</span> <span class="n">gestureRecognizer</span><span class="p">.</span><span class="n">state</span> <span class="p">{</span>
+            <span class="k">let</span> <span class="n">appDelegate</span> <span class="o">=</span> <span class="bp">UIApplication</span><span class="p">.</span><span class="n">sharedApplication</span><span class="p">().</span><span class="n">delegate</span> <span class="kt">as</span><span class="o">!</span> <span class="n">AppDelegate</span>
+            
+            <span class="k">let</span> <span class="n">pin</span> <span class="o">=</span> <span class="n">Pin</span><span class="p">(</span><span class="nl">annotationLatitude</span><span class="p">:</span> <span class="n">touchMapCoordinate</span><span class="p">.</span><span class="n">latitude</span><span class="p">,</span> <span class="nl">annotationLongitude</span><span class="p">:</span> <span class="n">touchMapCoordinate</span><span class="p">.</span><span class="n">longitude</span><span class="p">,</span> <span class="nl">context</span><span class="p">:</span> <span class="n">appDelegate</span><span class="p">.</span><span class="n">managedObjectContext</span><span class="o">!</span><span class="p">)</span>
+            <span class="n">mapView</span><span class="p">.</span><span class="n">addAnnotation</span><span class="p">(</span><span class="n">pin</span><span class="p">)</span>
+            <span class="n">appDelegate</span><span class="p">.</span><span class="n">saveContext</span><span class="p">()</span>
+        <span class="p">}</span>
+    <span class="p">}</span></code></pre></div>
+
+<p>We will instantiate the appDelegate so we can use its methods. Then we proceed to instantiate a pin as our Pin class. We will initialize it with the coordinates from our touchMapCoordinate and use the appDelegate context as our context. Then we add the pin to our map view and we save our context - we could do this at another point too but it seems smart to do it here. We just successfully added a Pin to our CoreData model!</p>
+
+<h3 id="step-five---fetching-our-pins-and-adding-them-to-our-map-when-starting-our-app">Step five - fetching our Pins and adding them to our map when starting our app</h3>
+
+<p>Alright, let’s make sure that the pins that we insert into CoreData also get fetched when we need them, i.e. when the mapView loads. Let’s first change some of the logic that we implemented before. Import CoreData to our ViewController. Let’s also declare two implicitly unwrapped variables in ViewController:</p>
+
+<div class="highlight"><pre><code class="language-swift" data-lang="swift"><span class="k">var</span> <span class="nl">appDelegate</span><span class="p">:</span> <span class="n">AppDelegate</span><span class="o">!</span>
+    <span class="k">var</span> <span class="nl">sharedContext</span><span class="p">:</span> <span class="bp">NSManagedObjectContext</span><span class="o">!</span></code></pre></div>
+
+<p>Next, in our viewDidLoad method, at the very top, initialize the two new variables as so:</p>
+
+<div class="highlight"><pre><code class="language-swift" data-lang="swift"><span class="n">appDelegate</span> <span class="o">=</span> <span class="bp">UIApplication</span><span class="p">.</span><span class="n">sharedApplication</span><span class="p">().</span><span class="n">delegate</span> <span class="kt">as</span><span class="o">!</span> <span class="n">AppDelegate</span>
+        <span class="n">sharedContext</span> <span class="o">=</span> <span class="n">appDelegate</span><span class="p">.</span><span class="n">managedObjectContext</span></code></pre></div>
+
+<p>this allows us to access our NSManagedObjectContext and our saveContext() method throughout the ViewController. 
+Do not forget to adjust the dropPin method accordingly! Delete the declaration of appDelegate that we had before and use the sharedContext variable in our init method.</p>
+
+<p>Alright, let’s create a method for a fetchrequest! Simply use this code:</p>
+
+<div class="highlight"><pre><code class="language-swift" data-lang="swift"><span class="k">func</span> <span class="n">fetchAllPins</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="n">Pin</span><span class="p">]</span> <span class="p">{</span>
+        <span class="k">let</span> <span class="nl">error</span><span class="p">:</span> <span class="n">NSErrorPointer</span> <span class="o">=</span> <span class="nb">nil</span>
+        <span class="k">let</span> <span class="n">fetchRequest</span> <span class="o">=</span> <span class="bp">NSFetchRequest</span><span class="p">(</span><span class="nl">entityName</span><span class="p">:</span> <span class="s">&quot;Pin&quot;</span><span class="p">)</span>
+        <span class="k">let</span> <span class="n">results</span> <span class="o">=</span> <span class="n">sharedContext</span><span class="p">.</span><span class="n">executeFetchRequest</span><span class="p">(</span><span class="n">fetchRequest</span><span class="p">,</span> <span class="nl">error</span><span class="p">:</span> <span class="n">error</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">error</span> <span class="o">!=</span> <span class="nb">nil</span> <span class="p">{</span>
+            <span class="n">println</span><span class="p">(</span><span class="s">&quot;Error in fectchAllActors(): \(error)&quot;</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">results</span> <span class="kt">as</span><span class="o">!</span> <span class="p">[</span><span class="n">Pin</span><span class="p">]</span>
+    <span class="p">}</span></code></pre></div>
+
+<p>We create a fetchrequest, then execute it. In case there are any errors, we print the error to the console. The results are then returned as an array of pins. Now that we have a method can allows us to access our Pins as an array, let’s put them on the map! At the bottom of our viewDidLoad method, add the following code:</p>
+
+<div class="highlight"><pre><code class="language-swift" data-lang="swift"><span class="n">mapView</span><span class="p">.</span><span class="n">addAnnotations</span><span class="p">(</span><span class="n">fetchAllPins</span><span class="p">())</span></code></pre></div>
+
+<p>Great, now we are able to see the pins that we add. Let’s try it out.</p>
+
+<h3 id="step-six---deleting-pins">Step six - deleting pins</h3>
+
+<p>This step is remarkably easy. We will implement one of our delegate methods - didSelectAnnotation. The wonderful thing is that all mapView.annotations are saved as an array - an array of Pins! That means the selected annotation can always be casted as a Pin and deleted from the managed context. The method should look like this:</p>
+
+<div class="highlight"><pre><code class="language-swift" data-lang="swift"><span class="k">func</span> <span class="nf">mapView</span><span class="p">(</span><span class="nl">mapView</span><span class="p">:</span> <span class="bp">MKMapView</span><span class="o">!</span><span class="p">,</span> <span class="n">didSelectAnnotationView</span> <span class="nl">view</span><span class="p">:</span> <span class="bp">MKAnnotationView</span><span class="o">!</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">let</span> <span class="n">pin</span> <span class="o">=</span> <span class="n">view</span><span class="p">.</span><span class="n">annotation</span> <span class="kt">as</span><span class="o">!</span> <span class="n">Pin</span>
+        <span class="n">sharedContext</span><span class="p">.</span><span class="n">deleteObject</span><span class="p">(</span><span class="n">pin</span><span class="p">)</span>
+        <span class="n">mapView</span><span class="p">.</span><span class="n">removeAnnotation</span><span class="p">(</span><span class="n">pin</span><span class="p">)</span>
+        <span class="n">appDelegate</span><span class="p">.</span><span class="n">saveContext</span><span class="p">()</span>
+    <span class="p">}</span></code></pre></div>
+
+<p>That was our last method! Our viewController should now look like this:</p>
+
+<div class="highlight"><pre><code class="language-swift" data-lang="swift"><span class="k">import</span> <span class="n">CoreData</span>
+<span class="k">import</span> <span class="n">UIKit</span>
+<span class="k">import</span> <span class="n">MapKit</span>
+
+<span class="k">class</span> <span class="nl">ViewController</span><span class="p">:</span> <span class="bp">UIViewController</span><span class="p">,</span> <span class="bp">MKMapViewDelegate</span> <span class="p">{</span>
+
+    <span class="p">@</span><span class="kt">IBOutlet</span> <span class="k">weak</span> <span class="k">var</span> <span class="nl">mapView</span><span class="p">:</span> <span class="bp">MKMapView</span><span class="o">!</span>
+    
+    <span class="k">var</span> <span class="nl">appDelegate</span><span class="p">:</span> <span class="n">AppDelegate</span><span class="o">!</span>
+    <span class="k">var</span> <span class="nl">sharedContext</span><span class="p">:</span> <span class="bp">NSManagedObjectContext</span><span class="o">!</span>
+    
+    <span class="kr">override</span> <span class="k">func</span> <span class="n">viewDidLoad</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nb">super</span><span class="p">.</span><span class="n">viewDidLoad</span><span class="p">()</span>
+        
+        <span class="n">appDelegate</span> <span class="o">=</span> <span class="bp">UIApplication</span><span class="p">.</span><span class="n">sharedApplication</span><span class="p">().</span><span class="n">delegate</span> <span class="kt">as</span><span class="o">!</span> <span class="n">AppDelegate</span>
+        
+        <span class="n">sharedContext</span> <span class="o">=</span> <span class="n">appDelegate</span><span class="p">.</span><span class="n">managedObjectContext</span>
+        
+        <span class="k">var</span> <span class="n">longPress</span> <span class="o">=</span> <span class="bp">UILongPressGestureRecognizer</span><span class="p">(</span><span class="nl">target</span><span class="p">:</span> <span class="nb">self</span><span class="p">,</span> <span class="nl">action</span><span class="p">:</span> <span class="s">&quot;dropPin:&quot;</span><span class="p">)</span>
+        <span class="n">longPress</span><span class="p">.</span><span class="n">minimumPressDuration</span> <span class="o">=</span> <span class="mf">0.5</span>
+        <span class="n">mapView</span><span class="p">.</span><span class="n">addGestureRecognizer</span><span class="p">(</span><span class="n">longPress</span><span class="p">)</span>
+        
+        <span class="n">mapView</span><span class="p">.</span><span class="n">delegate</span> <span class="o">=</span> <span class="nb">self</span>
+        
+        <span class="n">mapView</span><span class="p">.</span><span class="n">addAnnotations</span><span class="p">(</span><span class="n">fetchAllPins</span><span class="p">())</span>
+    <span class="p">}</span>
+    
+    <span class="k">func</span> <span class="n">dropPin</span><span class="p">(</span><span class="nl">gestureRecognizer</span><span class="p">:</span> <span class="bp">UIGestureRecognizer</span><span class="p">)</span> <span class="p">{</span>
+        
+        <span class="k">let</span> <span class="nl">tapPoint</span><span class="p">:</span> <span class="bp">CGPoint</span> <span class="o">=</span> <span class="n">gestureRecognizer</span><span class="p">.</span><span class="n">locationInView</span><span class="p">(</span><span class="n">mapView</span><span class="p">)</span>
+        <span class="k">let</span> <span class="nl">touchMapCoordinate</span><span class="p">:</span> <span class="n">CLLocationCoordinate2D</span> <span class="o">=</span> <span class="n">mapView</span><span class="p">.</span><span class="n">convertPoint</span><span class="p">(</span><span class="n">tapPoint</span><span class="p">,</span> <span class="nl">toCoordinateFromView</span><span class="p">:</span> <span class="n">mapView</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">UIGestureRecognizerState</span><span class="p">.</span><span class="n">Began</span> <span class="o">==</span> <span class="n">gestureRecognizer</span><span class="p">.</span><span class="n">state</span> <span class="p">{</span>
+            <span class="k">let</span> <span class="n">pin</span> <span class="o">=</span> <span class="n">Pin</span><span class="p">(</span><span class="nl">annotationLatitude</span><span class="p">:</span> <span class="n">touchMapCoordinate</span><span class="p">.</span><span class="n">latitude</span><span class="p">,</span> <span class="nl">annotationLongitude</span><span class="p">:</span> <span class="n">touchMapCoordinate</span><span class="p">.</span><span class="n">longitude</span><span class="p">,</span> <span class="nl">context</span><span class="p">:</span> <span class="n">appDelegate</span><span class="p">.</span><span class="n">managedObjectContext</span><span class="o">!</span><span class="p">)</span>
+            <span class="n">mapView</span><span class="p">.</span><span class="n">addAnnotation</span><span class="p">(</span><span class="n">pin</span><span class="p">)</span>
+            <span class="n">appDelegate</span><span class="p">.</span><span class="n">saveContext</span><span class="p">()</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    
+    <span class="k">func</span> <span class="n">mapView</span><span class="p">(</span><span class="nl">mapView</span><span class="p">:</span> <span class="bp">MKMapView</span><span class="o">!</span><span class="p">,</span> <span class="n">didSelectAnnotationView</span> <span class="nl">view</span><span class="p">:</span> <span class="bp">MKAnnotationView</span><span class="o">!</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">let</span> <span class="n">pin</span> <span class="o">=</span> <span class="n">view</span><span class="p">.</span><span class="n">annotation</span> <span class="kt">as</span><span class="o">!</span> <span class="n">Pin</span>
+        <span class="n">sharedContext</span><span class="p">.</span><span class="n">deleteObject</span><span class="p">(</span><span class="n">pin</span><span class="p">)</span>
+        <span class="n">mapView</span><span class="p">.</span><span class="n">removeAnnotation</span><span class="p">(</span><span class="n">pin</span><span class="p">)</span>
+        <span class="n">appDelegate</span><span class="p">.</span><span class="n">saveContext</span><span class="p">()</span>
+    <span class="p">}</span>
+    
+    
+    <span class="k">func</span> <span class="n">fetchAllPins</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="n">Pin</span><span class="p">]</span> <span class="p">{</span>
+        
+        <span class="k">let</span> <span class="nl">error</span><span class="p">:</span> <span class="n">NSErrorPointer</span> <span class="o">=</span> <span class="nb">nil</span>
+        <span class="k">let</span> <span class="n">fetchRequest</span> <span class="o">=</span> <span class="bp">NSFetchRequest</span><span class="p">(</span><span class="nl">entityName</span><span class="p">:</span> <span class="s">&quot;Pin&quot;</span><span class="p">)</span>
+        <span class="k">let</span> <span class="n">results</span> <span class="o">=</span> <span class="n">sharedContext</span><span class="p">.</span><span class="n">executeFetchRequest</span><span class="p">(</span><span class="n">fetchRequest</span><span class="p">,</span> <span class="nl">error</span><span class="p">:</span> <span class="n">error</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">error</span> <span class="o">!=</span> <span class="nb">nil</span> <span class="p">{</span>
+            <span class="n">println</span><span class="p">(</span><span class="s">&quot;Error in fectchAllActors(): \(error)&quot;</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">results</span> <span class="kt">as</span><span class="o">!</span> <span class="p">[</span><span class="n">Pin</span><span class="p">]</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+<p>Tada! We are finished. Additional modification could include: Adding data like photos to a Pin, and defining a relationship between a Photo and the Pin object, using NSFetchResultsController to get results and update UI, modifying appearance of the Pins, displaying user location on map, etc.</p>
+
+<p>I hope you enjoyed this tutorial!</p>
+
+
+  </div>
   
   <div class="post">
     <h1 class="post-title">
@@ -196,140 +492,6 @@
 <p>Concluding, I am very satisfied with my progress. The app looks pretty sleek. I still have some issues understanding the whole navigation controller concept and with some of the layout stuff but overall I have a pretty good idea how the MVC concept works and how data gets passed around through the app. I am excited about my next projects.</p>
 
 <p><img src="/blog/assets/images/meme-detail.jpg" alt="Meme Detail Delete" title="Detail View" /></p>
-
-  </div>
-  
-  <div class="post">
-    <h1 class="post-title">
-      <a href="/blog//finance/2015/06/20/sources-of-money/">
-        Sources of money
-      </a>
-    </h1>
-
-    <span class="post-date">20 Jun 2015</span>
-
-    <p>This is the first post in a series about fundraising for entrepreneurs. For an overview, navigate to <a href="/finance/2015/06/19/fundraising-101/">fundraising 101</a>.</p>
-
-<p>Sources of money and actors in the venture financing business are abundant. There are angels, accelerators, incubators, VC funds, strategic funds, institutional investors, friends and family, grants, and so on and so on. How should you know what is right for you and what is not? VC money definitely is not always the right answer, as this <a href="http://www.fastcompany.com/3036130/hit-the-ground-running/why-venture-capital-wasnt-right-for-me-and-15-alternative-funding-sou">blogpost by Laurie Peterson</a> perfectly illustrates. She also provides an excellent overview over the type of sources of funding that you can leverage next to traditional VC funding.</p>
-
-<p>Especially companies in seed or early funding stage can often profit from alternative funding models to traditional, large VCs. The infographic below demonstrates that VCs have been reluctant to make seed stage investments in recent years, even though the sums of money have increased. Early stage deals have been faring better but the number has been decreasing as of this quarter. This evidence clearly warrants a second look at the alternatives, some of which I will illustrate in this post. I will not cover traditional VCs but will assume that the reader is familiar with what a VC fund is.</p>
-
-<script id="infogram_0_number_of_deals_and__per_deal_in_vc_from_2005_to_2015" src="//e.infogr.am/js/embed.js?46k" type="text/javascript"></script>
-<div style="width:100%;border-top:1px solid #acacac;padding-top:3px;font-family:Arial;font-size:10px;text-align:center;"><a target="_blank" href="https://infogr.am/number_of_deals_and__per_deal_in_vc_from_2005_to_2015" style="color:#acacac;text-decoration:none;">Number of deals and $ per deal in VC from 2005 to 2015</a> | <a style="color:#acacac;text-decoration:none;" href="https://infogr.am" target="_blank">Create infographics</a></div>
-
-<h3 id="free-money">“Free Money”</h3>
-
-<p>The first option to consider when fundraising are sources of “free money”, i.e. money that does not imply relinquishing equity in the company or taking on debt obligations. I would differentiate between three major categories here:</p>
-
-<h4 id="grants-and-government-schemes">1. Grants and government schemes</h4>
-
-<p>Grants are an extremely useful way to receive funding for early stage research. Grants are usually an option in university environments and are tied to specific types of research.
-<!-- research financing with grants --></p>
-
-<h4 id="competitions">2. Competitions</h4>
-
-<p>Grasshopper has compiled a great list with many available startup competitions(<a href="http://grasshopper.com/blog/startup-competition-guide/">http://grasshopper.com/blog/startup-competition-guide/</a>). 
-There is an abundance of entrepreneurship competitions throughout the US and Europe. Most competitions hand out cash-prizes and in many cases offer additional benefits such as consulting, engineering expertise or introductions to further programs. Grasshopper has compiled a great list with many available <a href="http://grasshopper.com/blog/startup-competition-guide/">startup competitions</a>.</p>
-
-<!-- The list below contains a continuously updated list of competitions with prizes. **Feel free to submit competitions [here](TODO: INSERT LINK) for inclusion on the list**
- -->
-
-<!-- Make list with competitions, main prize, location and focus -->
-
-<h4 id="summer-programs">3. Summer programs</h4>
-
-<p>Summer programs are another great way to raise money free of cost with the added benefit of mentorship and often office space for several months. The mentorship aspect is actually the most valuable aspect of the offer. Usually, teams participating in those types of programs are strung together in “classes” and go through the program together. The lessons learned from one another plus many bonus programs, workshops and mentorship lessons that the accelerators offer make these programs tremendously valuable. Since many of these programs are conducted by VCs or by major universities, they are also an excellent opportunity expand your network for possible future funding.</p>
-
-<p>Some of the more prominent summer programs are:</p>
-
-<p><a href="http://summer.hcp.com/">Summer@Highland</a>: Check out their blog at <a href="http://summerathighland.tumblr.com/">http://summerathighland.tumblr.com/</a> for more details and to know what being part of a summer program is like.</p>
-
-<p><a href="http://lsvp.com/summer-fellowships/">Lightspeed Ventures Fellowship</a></p>
-
-<p><a href="http://entrepreneurship.mit.edu/accelerator/">MIT GFSA accelerator</a></p>
-
-<!-- Make list with accelerators and find example blogpost that shows a day in an accelerator.  -->
-
-<p>The caveat with these sources is that you can absolutely not plan for or rely on them. Especially in grants the application process might be very lengthy and burdensome. Competitions and summer programs however are definitely an important stepping stone, giving entrepreneurs the opportunity to re-work pitches, to network and to gain general public exposure for their company.</p>
-
-<h3 id="angels-angel-funds-and-micro-vcs">Angels, Angel Funds and Micro-VCs</h3>
-
-<p>Angels in a nutshell are wealthy individuals that usually have either founded a company before or accumulated significant industry expertise. Angels commonly invest between $100.000 to $1.000.000, or more in exceptional cases. For a brief summary on angel investors, read <a href="http://www.entrepreneur.com/article/52742">http://www.entrepreneur.com/article/52742</a>. Next to providing initial seed money, angel investors can be of tremendous help with their usually extensive networks and expertise. Angel investors have the reputation to not make money in the fundraising community as many of their investments are in very risky early stage or seed companies. Studies have shown this conception <a href="http://www.angelblog.net/Angel_Returns.html">not to be true</a>. For some further reading on angels, visit:</p>
-
-<ul>
-  <li><a href="http://www.angelblog.net/index.html">Angel Blog</a></li>
-  <li><a href="http://www.paulgraham.com/angelinvesting.html">How to be an Angel Investor</a></li>
-  <li><a href="https://www.gsb.stanford.edu/ces/resources/angel_financing.html">Angel Financing</a></li>
-  <li><a href="http://angel.co/">Angel List (You should really know this website)</a></li>
-  <li><a href="http://nextviewventures.com/blog/different-types-of-angel-investors/">Different Types of Angels</a></li>
-</ul>
-
-<p>Angel investor groups have nuanced differences as well.</p>
-
-<p><img src="/assets/images/angel_scales.jpg" alt="Angel Groups" />
-<em>Courtesy of: <a href="http://commonangels.com/our-team/management/maia-heymann/">Maya Heymann</a></em></p>
-
-<p><strong>Angel groups:</strong> Angel investor groups or funds consist of several angels that have joined forces in order to combine expertise and to pool financial resources, allowing greater investments. They usually average around 100 members, are region-specific and can differ in the industries they invest in.</p>
-
-<p>Further reading:</p>
-
-<ul>
-  <li><a href="http://www.angelcapitalassociation.org/directory/">Angel Capital Association members</a></li>
-  <li><a href="http://www.entrepreneur.com/article/220149">Top 10 funds</a></li>
-</ul>
-
-<p><strong>Angel funds:</strong> Angel funds pool individual angels money into a fund that then gets invested. Entrepreneurs have the advantage of having access to larger monetary funds. The fund managers can find the individual angels invested in the fund that would be the best fit for the company as advisors.</p>
-
-<p>Further reading:</p>
-
-<ul>
-  <li><a href="http://commonangels.com/about/">Common Angels Venture</a></li>
-</ul>
-
-<p><strong>Angel syndicates:</strong> Angel list provides the opportunity for syndicates to co-invest in companies. Hereby individual angels make a pledge to a company and other angels make follow-on investments. The investment of one angel hereby acts as a “social proof” or seal of approval. Usually super star angels will have several followers willing to make co-investments. Thus, secure an investment from one and you might get a few follow-ons.</p>
-
-<p>Further reading:</p>
-
-<ul>
-  <li><a href="http://venturebeat.com/2014/06/29/an-angel-investors-ultimate-guide-to-angellist-syndicates/">Ultimate Guide to Syndicates</a></li>
-  <li><a href="https://angel.co/syndicates">Angel List Syndicates</a></li>
-  <li><a href="http://bryce.vc/post/3520840379/why-i-deleted-my-angellist-account">A critical View</a></li>
-</ul>
-
-<p><strong>Micro-VCs</strong> are venture capital funds with smaller amounts of assets under management (AUM), usually below $50m but up to about $100m. Micro-VCs primarily engage in seed and early-stage deals and invest smaller amounts of money. The current early stage average deal size for Micro-VCs is $3.4m. I have included several links for great readings on micro-VCs here:</p>
-
-<ul>
-  <li><a href="https://www.cbinsights.com/blog/top-micro-venture-capital-firms/#network">Trends and Top Investors</a></li>
-  <li><a href="http://pevcbanker.com/mapping-out-micro-vc/">Great list of Micro-VCs</a></li>
-  <li><a href="http://techcrunch.com/2015/04/26/the-microvc-shakeout/">Concerns about growing number of Micro-VCs</a></li>
-  <li><a href="https://www.cbinsights.com/blog/revisiting-micro-vc-market/">Where is the Micro-VC market going?</a></li>
-</ul>
-
-<h3 id="accelerators">Accelerators</h3>
-
-<p>Quoting <a href="https://en.wikipedia.org/wiki/Seed_accelerator">Wikipedia</a> here:</p>
-
-<blockquote>
-  <p>Seed accelerators also known as startup accelerators are fixed-term, cohort-based programs, that include mentorship and educational components and culminate in a public pitch event or demo day. While traditional business incubators are often government-funded, generally take no equity, and focus on biotech, medical technology, clean tech or product-centric companies, accelerators can be either privately or publicly funded and focus on a wide range of industries.</p>
-</blockquote>
-
-<p>The main differences between business incubators and accelerators are:</p>
-
-<ol>
-  <li>The application process is open to anyone, but highly competitive. Y Combinator and TechStars have application acceptance rates between 1% and 3%.</li>
-  <li>A seed investment in the startups is usually made, in exchange for equity. Typically, the investment is between US$20,000 and US$50,000 (or £10,000 and £50,000 in Europe)</li>
-  <li>The focus is on small teams, not on individual founders. Accelerators consider that one person is insufficient to handle all the work associated with a startup.</li>
-  <li>The startups must “graduate” by a given deadline, typically after 3 months. During this time, they receive intensive mentoring and training, and they are expected to iterate rapidly. Virtually all accelerators end their programs with a “Demo Day”, where the startups present to investors.</li>
-  <li>Startups are accepted and supported in cohort batches or classes (the accelerator isn’t an on-demand resource). The peer support and feedback that the classes provide is an important advantage. If the accelerator doesn’t offer a common workspace, the teams will meet periodically.</li>
-</ol>
-
-<p>End quote from Wikipedia. This article gives a very accurate description of accelerators - for detailed rankings of accelerators navigate to <a href="http://www.seedrankings.com/">http://www.seedrankings.com/</a>.</p>
-
-<h3 id="conclusion">Conclusion</h3>
-
-<p>There is an abundance of alternative funding forms out there. In this post I have tried to give a snapshot. In my the next section - “How to choose the right investor” - I want to cover some of the strategies and caveats when looking for the right investor.</p>
-
-<p>Feel free to leave comments for feedback and pointing out mistakes :-)</p>
 
   </div>
   
